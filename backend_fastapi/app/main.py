@@ -268,7 +268,12 @@ def handle_contact(request: ContactRequest):
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 dist_path = os.path.join(BASE_DIR, "dist")
 
+print(f"DEBUG DEPLOY: BASE_DIR={BASE_DIR}")
+print(f"DEBUG DEPLOY: dist_path={dist_path}")
+print(f"DEBUG DEPLOY: dist_path exists={os.path.exists(dist_path)}")
+
 if os.path.exists(dist_path):
+    print(f"DEBUG DEPLOY: contents of dist={os.listdir(dist_path)}")
     from fastapi.staticfiles import StaticFiles
     from fastapi.responses import FileResponse
     
@@ -284,7 +289,10 @@ if os.path.exists(dist_path):
             raise HTTPException(status_code=404, detail="Not Found")
             
         file_path = os.path.join(dist_path, catchall)
+        print(f"DEBUG DEPLOY: Request path='/{catchall}', File path='{file_path}', Exists={os.path.exists(file_path)}")
         if os.path.exists(file_path) and os.path.isfile(file_path):
             return FileResponse(file_path)
-        return FileResponse(os.path.join(dist_path, "index.html"))
+        index_file_path = os.path.join(dist_path, "index.html")
+        print(f"DEBUG DEPLOY: Serving index.html from '{index_file_path}', Exists={os.path.exists(index_file_path)}")
+        return FileResponse(index_file_path)
 
