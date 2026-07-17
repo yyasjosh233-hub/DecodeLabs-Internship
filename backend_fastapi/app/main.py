@@ -14,6 +14,9 @@ from backend_fastapi.app.services.log_parser import LogParserService
 from backend_fastapi.app.services.config_analyzer import ConfigAnalyzerService
 from backend_fastapi.app.services.urdf_analyzer import URDFAnalyzerService
 
+# Import mock data
+from backend_fastapi.app.data.mock_data import robot_types, blog_posts
+
 app = FastAPI(
     title="DVJ Robotics AI RAG Backend",
     description="Grounded AI services for ROS 2 debugging, URDF analysis, and AGRO-R1 telemetry",
@@ -241,3 +244,47 @@ def delete_source(doc_id: str):
     if not success:
         raise HTTPException(status_code=404, detail="Document ID not found in database.")
     return {"success": True, "message": "Document deleted successfully."}
+
+# Unified Backend Routes (migrated from Express server.js)
+class ContactRequest(BaseModel):
+    name: str
+    email: str
+    message: str
+
+@app.get("/api/robotics")
+def get_robotics():
+    return robot_types
+
+@app.get("/api/posts")
+def get_posts():
+    return blog_posts
+
+@app.post("/api/contact")
+def handle_contact(request: ContactRequest):
+    print(f"Received contact inquiry: {request.model_dump()}")
+    return {"success": True, "message": "Inquiry received"}
+
+# Serve static files from React build folder in production
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+dist_path = os.path.join(BASE_DIR, "dist")
+
+if os.path.exists(dist_path):
+    from fastapi.staticfiles import StaticFiles
+    from fastapi.responses import FileResponse
+    
+    # Mount the /assets folder for Vite build assets
+    assets_path = os.path.join(dist_path, "assets")
+    if os.path.exists(assets_path):
+        app.mount("/assets", StaticFiles(directory=assets_path), name="assets")
+        
+    @app.get("/{catchall:path}")
+    def serve_react_app(catchall: str):
+        # Prevent catching API routes
+        if catchall.startswith("api"):
+            raise HTTPException(status_code=404, detail="Not Found")
+            
+        file_path = os.path.join(dist_path, catchall)
+        if os.path.exists(file_path) and os.path.isfile(file_path):
+            return FileResponse(file_path)
+        return FileResponse(os.path.join(dist_path, "index.html"))
+
