@@ -59,6 +59,27 @@ Robots are widely used in industries, healthcare, agriculture,
 defense, logistics, and research.`;
     } else if (q.includes("hello") || q.includes("hi") || q.includes("hlo")) {
         return "Hello 👋 I am the Dj Group AI Expert Assistant. How can I help you with robotics today?";
+    } else if (q.includes("path planning") || q.includes("robotics path planning")) {
+        return `Robotics Path Planning calculates collision-free paths from a start pose to a goal pose. 
+It uses algorithms like RRT*, A*, D*, Dijkstra, and Quintic Polynomial trajectory generation to ensure continuous C^2 velocity and acceleration profiles.`;
+    } else if (q.includes("forward kinematics")) {
+        return `Forward Kinematics (FK) calculates the 3D position and orientation (pose) of the end-effector from given joint angles (θ1...θ6) using Denavit-Hartenberg (DH) transformation matrices.`;
+    } else if (q.includes("inverse kinematics")) {
+        return `Inverse Kinematics (IK) calculates the required joint angles (θ1...θ6) to place the end-effector at a specific 6D target pose (X, Y, Z, Roll, Pitch, Yaw) using analytical or Damped Least Squares (DLS) numerical solvers.`;
+    } else if (q.includes("jacobian matrix") || q.includes("jacobian")) {
+        return `The Jacobian Matrix J(θ) relates joint angular velocities to end-effector linear and angular velocities (x_dot = J * q_dot). Its determinant det(J J^T) determines singular configurations where degrees of freedom are lost.`;
+    } else if (q.includes("ros2") || q.includes("ros 2")) {
+        return `ROS 2 (Robot Operating System) is an open-source middleware suite for robotics development. It uses DDS for real-time pub/sub communication, QoS profiles, TF2 transform trees, and modular action servers.`;
+    } else if (q.includes("three.js robotics") || q.includes("three.js") || q.includes("threejs")) {
+        return `Three.js Robotics provides real-time WebGL 3D rendering for robot arms, AMRs, URDF meshes, coordinate frames, collision hulls, and trajectory lines directly in web browsers at high frame rates.`;
+    } else if (q.includes("opencv")) {
+        return `OpenCV (Open Source Computer Vision) is a library of programming functions for real-time computer vision, image processing, edge detection, contour analysis, binarization, and object classification.`;
+    } else if (q.includes("computer vision")) {
+        return `Computer Vision enables robotic systems to process visual inputs from RGB/Depth cameras, perform feature detection, 3D point cloud reconstruction, defect classification, and spatial measurements.`;
+    } else if (q.includes("quality inspection") || q.includes("automated quality inspection")) {
+        return `Automated Quality Inspection combines OpenCV processing pipelines (15 visual stages) with high-speed optical camera triggers to detect manufacturing defects like missing gear teeth, surface cracks, and dimension variances.`;
+    } else if (q.includes("industrial ai")) {
+        return `Industrial AI integrates autonomous path planning, 3D WebGL digital twins, OpenCV vision inspection, and low-latency ROS 2 telemetry to optimize smart factory throughput and manufacturing reliability.`;
     } else {
         return "I am the Dj Group AI Expert Assistant 🤖. Ask me anything about robotics, AI robots, drones, automation, or technology.";
     }
@@ -375,8 +396,65 @@ app.post("/api/ai/chat", (req, res) => {
 app.post("/api/contact", (req, res) => {
     const { name, email, message } = req.body;
     console.log("Received contact inquiry:", { name, email, message });
-    // In a real app, you would send an email or save to DB here
     res.json({ success: true, message: "Inquiry received" });
+});
+
+// ==========================================
+// INDUSTRIAL AI PLATFORM NEW REST APIS
+// ==========================================
+const robotSessionsDB = [
+    { sessionId: 'SESS-101', robotModel: '6-DOF Industrial Arm', status: 'ONLINE', mode: 'AUTOMATIC', jointCount: 6, createdTime: new Date().toISOString() }
+];
+
+const trajectoriesDB = [
+    { trajectoryId: 'TRAJ-001', jointName: 'Arm_Group', waypointsCount: 120, durationSec: 3.0, status: 'COMPLETED' }
+];
+
+const inspectionsDB = [
+    { inspectionId: 'INSP-849102', timestamp: new Date().toISOString(), partType: 'GEAR', status: 'PASS', confidenceScore: 98.6, defects: [] }
+];
+
+const reportsDB = [
+    { reportId: 'REP-9001', type: 'PDF', generatedAt: new Date().toISOString(), recordsCount: 1 }
+];
+
+const activityLogsDB = [
+    { id: 1, action: 'Platform Ingest', detail: 'Industrial AI Platform initialized cleanly.', time: 'Just now' }
+];
+
+app.get("/api/industrial/robot-sessions", (req, res) => res.json(robotSessionsDB));
+app.post("/api/industrial/robot-sessions", (req, res) => {
+    const session = { sessionId: `SESS-${Date.now()}`, ...req.body, createdTime: new Date().toISOString() };
+    robotSessionsDB.push(session);
+    res.json({ success: true, session });
+});
+
+app.get("/api/industrial/trajectories", (req, res) => res.json(trajectoriesDB));
+app.post("/api/industrial/trajectories", (req, res) => {
+    const trajectory = { trajectoryId: `TRAJ-${Date.now()}`, ...req.body };
+    trajectoriesDB.push(trajectory);
+    res.json({ success: true, trajectory });
+});
+
+app.get("/api/industrial/inspections", (req, res) => res.json(inspectionsDB));
+app.post("/api/industrial/inspections", (req, res) => {
+    const record = { inspectionId: `INSP-${Date.now().toString().slice(-6)}`, ...req.body };
+    inspectionsDB.push(record);
+    res.json({ success: true, record });
+});
+
+app.get("/api/industrial/reports", (req, res) => res.json(reportsDB));
+app.post("/api/industrial/reports", (req, res) => {
+    const report = { reportId: `REP-${Date.now().toString().slice(-4)}`, ...req.body, generatedAt: new Date().toISOString() };
+    reportsDB.push(report);
+    res.json({ success: true, report });
+});
+
+app.get("/api/industrial/activity-logs", (req, res) => res.json(activityLogsDB));
+app.post("/api/industrial/activity-logs", (req, res) => {
+    const log = { id: activityLogsDB.length + 1, ...req.body, time: 'Just now' };
+    activityLogsDB.push(log);
+    res.json({ success: true, log });
 });
 
 const PORT = 5000;

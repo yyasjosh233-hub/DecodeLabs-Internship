@@ -4,8 +4,14 @@ import logoImg from '../assets/logo_circle.png';
 
 const Sidebar = ({ isOpen, toggleSidebar, activeProject, setActiveProject }) => {
     const location = useLocation();
+    const [industrialOpen, setIndustrialOpen] = useState(true);
     const [labOpen, setLabOpen] = useState(true);
     const [showLightbox, setShowLightbox] = useState(false);
+
+    const industrialSubItems = [
+        { path: '/industrial-ai/robotics-path-planner', label: 'Week 1 – Robotics Path Planner' },
+        { path: '/industrial-ai/quality-inspection', label: 'Week 2 – Automated Quality Inspection' }
+    ];
 
     const projects = [
         { id: 'agro_r1', name: 'AGRO-R1 Farm Rover' },
@@ -98,7 +104,47 @@ const Sidebar = ({ isOpen, toggleSidebar, activeProject, setActiveProject }) => 
             {/* Navigation Menus */}
             <nav className="sidebar-nav">
                 <ul className="nav-menu">
-                    {menuItems.map(item => (
+                    {/* Dashboard */}
+                    <li className="nav-item">
+                        <Link 
+                            to="/workspace" 
+                            className={`nav-link-item ${location.pathname === '/workspace' ? 'active' : ''}`}
+                            title="Dashboard"
+                        >
+                            <span className="nav-icon">📊</span>
+                            {isOpen && <span className="nav-label">Dashboard</span>}
+                        </Link>
+                    </li>
+
+                    {/* Industrial AI Platform Collapsible Menu */}
+                    <li className="nav-item">
+                        <div 
+                            className={`nav-link-item lab-toggle ${location.pathname.startsWith('/industrial-ai') ? 'active-parent' : ''}`}
+                            onClick={() => setIndustrialOpen(!industrialOpen)}
+                            title="Industrial AI Platform"
+                            style={{ cursor: 'pointer', background: 'rgba(255, 222, 89, 0.08)', borderRadius: '8px' }}
+                        >
+                            <span className="nav-icon">🏭</span>
+                            {isOpen && <span className="nav-label" style={{ fontWeight: 'bold', color: '#ffde59' }}>Industrial AI Platform</span>}
+                            {isOpen && <span className="arrow">{industrialOpen ? '▼' : '►'}</span>}
+                        </div>
+                        {isOpen && industrialOpen && (
+                            <ul className="lab-submenu">
+                                {industrialSubItems.map(sub => (
+                                    <li key={sub.path}>
+                                        <Link 
+                                            to={sub.path} 
+                                            className={`subnav-link ${location.pathname === sub.path ? 'active' : ''}`}
+                                        >
+                                            {sub.label}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </li>
+
+                    {menuItems.filter(i => i.path !== '/workspace').map(item => (
                         <li key={item.path} className="nav-item">
                             <Link 
                                 to={item.path} 

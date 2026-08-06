@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import AnalyticsDashboard from '../industrial_ai/analytics/AnalyticsDashboard';
 
 const Dashboard = () => {
     const stats = [
@@ -171,6 +172,9 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Industrial AI Platform Dashboard Extension */}
+            <AnalyticsDashboard />
         </div>
     );
 };

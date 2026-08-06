@@ -1,15 +1,7 @@
-# Render Blueprint Specification
-# See https://render.com/docs/blueprints for details
 services:
   - type: web
     name: dvj-robotics-ai
-    env: docker
-    dockerFilePath: Dockerfile
+    runtime: docker
     plan: free
     region: oregon
-    envVars:
-      - key: PORT
-        value: 8000
-      # Add environment variables here if needed, e.g.:
-      # - key: OPENAI_API_KEY
-      #   sync: false
+    dockerfilePath: ./Dockerfile

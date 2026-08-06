@@ -32,6 +32,8 @@ import ProjectsWorkspace from './pages/ProjectsWorkspace';
 import TrustedSources from './pages/TrustedSources';
 import Settings from './pages/Settings';
 import GlobalRoboticsCompanies from './pages/GlobalRoboticsCompanies';
+import PathPlannerPage from './industrial_ai/robotics_path_planner/PathPlannerPage';
+import QualityInspectionPage from './industrial_ai/quality_inspection/QualityInspectionPage';
 
 // Public layout wrapper
 const PublicLayout = () => {
@@ -114,6 +116,8 @@ function App() {
             <Route path="/trusted-sources" element={<TrustedSources />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/robotics-companies" element={<GlobalRoboticsCompanies />} />
+            <Route path="/industrial-ai/robotics-path-planner" element={<PathPlannerPage />} />
+            <Route path="/industrial-ai/quality-inspection" element={<QualityInspectionPage />} />
           </Route>
 
           {/* Fallback to Platform Workspace */}

@@ -67,6 +67,7 @@ const Header = () => {
                     <Link to="/illustrations" className={location.pathname === '/illustrations' ? 'active' : ''}>Illustrations</Link>
                     <Link to="/blog" className={location.pathname === '/blog' ? 'active' : ''}>Blog</Link>
                     <Link to="/contact" className={location.pathname === '/contact' ? 'active' : ''}>Contact</Link>
+                    <Link to="/industrial-ai/robotics-path-planner" className={location.pathname.startsWith('/industrial-ai') ? 'active' : ''}>Industrial AI Platform</Link>
                     <Link to="/workspace" className="btn-nav" style={{ background: 'var(--accent-color)', color: '#000', border: 'none' }}>Platform Workspace</Link>
                 </div>
             </nav>

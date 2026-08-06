@@ -324,6 +324,39 @@
       "trust_score": 0.80,
       "url": "https://dvj-agro.ai/specs",
       "content": "The AGRO-R1 agricultural rover visual sensors comprise a dual stereo configuration: 1. Two Intel RealSense D435i depth cameras positioned at the front and rear, featuring an active IR stereo sensor with a 1280x720 depth resolution, a 30 fps frame rate, and a 87° x 58° field of view. 2. One high-resolution wide-angle RGB crop inspection camera with a 12 megapixel resolution and a 120° field of view for crop classification."
+    },
+    {
+      "id": "industrial_path_planning",
+      "title": "Robotics Path Planning and Quintic Trajectory Generation",
+      "domain": "MOVEIT",
+      "source_type": "OFFICIAL_DOCUMENTATION",
+      "authority": "Robotics Path Planning Specification",
+      "version": "1.0",
+      "trust_score": 1.0,
+      "url": "https://navigation.ros.org/concepts/index.html",
+      "content": "Robotics Path Planning generates smooth collision-free paths from a start pose to a goal pose. Quintic polynomial trajectory generation computes 5th-order position, velocity, and acceleration profiles s(t) = a0 + a1*t + a2*t^2 + a3*t^3 + a4*t^4 + a5*t^5 ensuring continuous C^2 motion with zero start/end acceleration."
+    },
+    {
+      "id": "industrial_kinematics",
+      "title": "Forward & Inverse Kinematics and Jacobian Matrix",
+      "domain": "JOINT_LIMITS",
+      "source_type": "OFFICIAL_DOCUMENTATION",
+      "authority": "Robotics Kinematics Reference",
+      "version": "1.0",
+      "trust_score": 1.0,
+      "url": "https://docs.ros.org/en/humble/Concepts/Intermediate/About-TF2.html",
+      "content": "Forward Kinematics (FK) computes end-effector 6D pose from joint angles using Denavit-Hartenberg (DH) matrix transformations. Inverse Kinematics (IK) calculates joint angles for a target pose using Damped Least Squares (DLS) Jacobian inversion. Yoshikawa Manipulability Index w = sqrt(det(J * J^T)) detects singular joint configurations."
+    },
+    {
+      "id": "industrial_vision_opencv",
+      "title": "OpenCV Automated Quality Inspection 15-Stage Pipeline",
+      "domain": "GENERAL_ROBOTICS",
+      "source_type": "OFFICIAL_DOCUMENTATION",
+      "authority": "OpenCV Vision Reference",
+      "version": "4.x",
+      "trust_score": 1.0,
+      "url": "https://opencv.org/documentation/",
+      "content": "Automated Quality Inspection processes industrial parts through a 15-stage OpenCV pipeline: Read Image, Grayscale, Gaussian Blur, Thresholding, Morphology, Edge Detection, Contours, Convex Hull, Convexity Defects, Bounding Box, Dimension Measurement, Shape Analysis, Defect Detection, Confidence Scoring, and PASS/FAIL disposition."
     }
   ]
 }
