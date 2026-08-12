@@ -4,7 +4,7 @@
 > **DecodeLabs Internship Project Submission**  
 > **Author:** Dayyam Yashwanth  
 > **Track:** AI & Machine Learning / Industrial Robotics  
-> **Repository:** [https://github.com/yyasjosh233-hub/dvj.git](https://github.com/yyasjosh233-hub/dvj.git)
+> **Repository:** [https://github.com/yyasjosh233-hub/DecodeLabs-Internship.git](https://github.com/yyasjosh233-hub/DecodeLabs-Internship.git)
 
 ---
 

@@ -4,7 +4,7 @@
 > **Intern Name:** Dayyam Yashwanth  
 > **Track:** AI & Machine Learning / Robotics Engineering  
 > **Institution:** RGM College of Engineering and Technology  
-> **Repository:** [https://github.com/yyasjosh233-hub/dvj.git](https://github.com/yyasjosh233-hub/dvj.git)  
+> **Repository:** [https://github.com/yyasjosh233-hub/DecodeLabs-Internship.git](https://github.com/yyasjosh233-hub/DecodeLabs-Internship.git)  
 > **Audit Date:** August 12, 2026
 
 ---
@@ -32,7 +32,7 @@
 ### 3. ✅ GitHub Repository created & synced
 - **Status:** **VERIFIED & PASSED**
 - **Details:**
-  - Remote Git Repository linked to `origin https://github.com/yyasjosh233-hub/dvj.git`.
+  - Remote Git Repository linked to `origin https://github.com/yyasjosh233-hub/DecodeLabs-Internship.git`.
   - All local commits staged and synchronized with `main` branch.
 
 ---

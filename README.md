@@ -77,7 +77,7 @@ graph TD
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yyasjosh233-hub/dvj.git
+git clone https://github.com/yyasjosh233-hub/DecodeLabs-Internship.git
 cd dvj
 ```
 
