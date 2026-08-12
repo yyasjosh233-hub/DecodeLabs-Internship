@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 
 const AnalysisDiagnosticsPanel = ({ analysis, context = "GENERAL" }) => {
+    const [expandedIssue, setExpandedIssue] = useState(null);
+
     if (!analysis) return null;
 
     const {
@@ -9,8 +11,6 @@ const AnalysisDiagnosticsPanel = ({ analysis, context = "GENERAL" }) => {
         issues = [],
         message = ""
     } = analysis;
-
-    const [expandedIssue, setExpandedIssue] = useState(null);
 
     // Color/Icon configuration based on status
     const getStatusConfig = (status) => {

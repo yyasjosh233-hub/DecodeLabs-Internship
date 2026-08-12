@@ -457,6 +457,169 @@ app.post("/api/industrial/activity-logs", (req, res) => {
     res.json({ success: true, log });
 });
 
+// ==========================================
+// WEEK 3 – ROBOTIC PROCESS AUTOMATION (RPA) REST APIS
+// ==========================================
+const rpaBotsDB = [
+    { id: 'BOT-01', name: 'Invoice Processing Bot', status: 'RUNNING', workflow: 'ERP Invoice Automation', assignedTasks: 42, successRate: 98.4, cpu: 34, memory: 420, lastRun: '2 mins ago' },
+    { id: 'BOT-02', name: 'Email Attachment Scraper', status: 'RUNNING', workflow: 'PO Email Scraping Pipeline', assignedTasks: 128, successRate: 99.1, cpu: 18, memory: 280, lastRun: 'Just now' },
+    { id: 'BOT-03', name: 'Excel Financial Auditor', status: 'IDLE', workflow: 'Quarterly Ledger Reconciler', assignedTasks: 14, successRate: 96.0, cpu: 4, memory: 150, lastRun: '15 mins ago' },
+    { id: 'BOT-04', name: 'Database Sync Robot', status: 'RUNNING', workflow: 'PostgreSQL-MongoDB Sync', assignedTasks: 310, successRate: 100.0, cpu: 52, memory: 610, lastRun: '1 min ago' }
+];
+
+const rpaWorkflowsDB = [
+    {
+        id: 'WF-101',
+        name: 'ERP Invoice Automation',
+        category: 'Document Automation',
+        blockCount: 9,
+        created: '2026-02-15',
+        status: 'Active',
+        blocks: [
+            { id: 'n1', type: 'Start', label: 'Start Flow', x: 50, y: 50, config: { trigger: 'Scheduled Cron' } },
+            { id: 'n2', type: 'Read Email', label: 'Fetch Invoices Email', x: 230, y: 50, config: { folder: 'Inbox/Invoices', unreadOnly: true } },
+            { id: 'n3', type: 'Download Attachment', label: 'Save PDF Invoices', x: 410, y: 50, config: { savePath: './temp/invoices' } },
+            { id: 'n4', type: 'OCR', label: 'EasyOCR Extract', x: 590, y: 50, config: { engine: 'EasyOCR', confidenceMin: 0.85 } },
+            { id: 'n5', type: 'Extract Data', label: 'Parse Invoice Fields', x: 590, y: 180, config: { fields: ['Invoice', 'Amount', 'Date', 'GST'] } },
+            { id: 'n6', type: 'Validate Data', label: 'Verify PO Match', x: 410, y: 180, config: { rule: 'Amount > 0 AND PO != null' } },
+            { id: 'n7', type: 'Database Insert', label: 'Push to PostgreSQL', x: 230, y: 180, config: { table: 'erp_invoices' } },
+            { id: 'n8', type: 'Send Email', label: 'Notify Accounts Team', x: 50, y: 180, config: { recipient: 'accounts@dvjgroup.ai' } },
+            { id: 'n9', type: 'End', label: 'Finish Workflow', x: 50, y: 310, config: {} }
+        ]
+    },
+    {
+        id: 'WF-102',
+        name: 'PO Email Scraping Pipeline',
+        category: 'Email & File RPA',
+        blockCount: 6,
+        created: '2026-02-20',
+        status: 'Active',
+        blocks: [
+            { id: 'n1', type: 'Start', label: 'Trigger Event', x: 50, y: 60, config: {} },
+            { id: 'n2', type: 'Read Email', label: 'Scan Outlook Orders', x: 230, y: 60, config: {} },
+            { id: 'n3', type: 'Read Excel', label: 'Parse Master PO List', x: 420, y: 60, config: {} },
+            { id: 'n4', type: 'Decision', label: 'Valid Vendor?', x: 420, y: 200, config: {} },
+            { id: 'n5', type: 'Database Update', label: 'Update DB Orders', x: 230, y: 200, config: {} },
+            { id: 'n6', type: 'End', label: 'Task Complete', x: 50, y: 200, config: {} }
+        ]
+    }
+];
+
+const rpaJobsDB = [
+    { id: 'JOB-901', botName: 'Invoice Processing Bot', workflowName: 'ERP Invoice Automation', status: 'COMPLETED', duration: '4.2s', itemsProcessed: 14, timestamp: '2026-03-01 16:40' },
+    { id: 'JOB-902', botName: 'Email Attachment Scraper', workflowName: 'PO Email Scraping Pipeline', status: 'COMPLETED', duration: '1.8s', itemsProcessed: 5, timestamp: '2026-03-01 16:35' }
+];
+
+const rpaLogsDB = [
+    { id: 1, timestamp: '16:44:12', level: 'INFO', botId: 'BOT-04', message: 'Database Sync Robot initiated batch transfer of 200 records.' },
+    { id: 2, timestamp: '16:42:05', level: 'SUCCESS', botId: 'BOT-01', message: 'Invoice Processing Bot completed extraction for INV-2026-889.' }
+];
+
+const rpaSchedulesDB = [
+    { id: 'SCH-01', workflowName: 'ERP Invoice Automation', botName: 'Invoice Processing Bot', cron: '*/15 * * * *', nextRun: 'In 6 mins', status: 'ACTIVE' },
+    { id: 'SCH-02', workflowName: 'PO Email Scraping Pipeline', botName: 'Email Attachment Scraper', cron: '0 * * * *', nextRun: 'In 16 mins', status: 'ACTIVE' }
+];
+
+const rpaReportsDB = [];
+
+// RPA Workflows API
+app.get("/api/rpa/workflows", (req, res) => res.json(rpaWorkflowsDB));
+app.post("/api/rpa/workflows", (req, res) => {
+    const wf = { id: `WF-${Date.now().toString().slice(-3)}`, ...req.body };
+    rpaWorkflowsDB.push(wf);
+    res.json({ success: true, workflow: wf });
+});
+
+// RPA Bots API
+app.get("/api/rpa/bots", (req, res) => res.json(rpaBotsDB));
+app.post("/api/rpa/bots", (req, res) => {
+    const bot = { id: `BOT-0${rpaBotsDB.length + 1}`, ...req.body };
+    rpaBotsDB.push(bot);
+    res.json({ success: true, bot });
+});
+app.post("/api/rpa/bots/:id/action", (req, res) => {
+    const { action } = req.body;
+    const bot = rpaBotsDB.find(b => b.id === req.params.id);
+    if (bot) {
+        if (action === 'start' || action === 'running') bot.status = 'RUNNING';
+        if (action === 'pause' || action === 'paused') bot.status = 'PAUSED';
+        if (action === 'stop' || action === 'idle') bot.status = 'IDLE';
+    }
+    res.json({ success: true, bot });
+});
+app.delete("/api/rpa/bots/:id", (req, res) => {
+    const idx = rpaBotsDB.findIndex(b => b.id === req.params.id);
+    if (idx !== -1) rpaBotsDB.splice(idx, 1);
+    res.json({ success: true });
+});
+
+// RPA Jobs API
+app.get("/api/rpa/jobs", (req, res) => res.json(rpaJobsDB));
+app.post("/api/rpa/jobs", (req, res) => {
+    const job = { id: `JOB-${Date.now().toString().slice(-3)}`, ...req.body };
+    rpaJobsDB.push(job);
+    res.json({ success: true, job });
+});
+
+// RPA Reports API
+app.get("/api/rpa/reports", (req, res) => res.json(rpaReportsDB));
+app.post("/api/rpa/reports", (req, res) => {
+    const report = { id: `RPA-REP-${Date.now().toString().slice(-4)}`, ...req.body, created: new Date().toISOString() };
+    rpaReportsDB.push(report);
+    res.json({ success: true, report });
+});
+
+// RPA Logs API
+app.get("/api/rpa/logs", (req, res) => res.json(rpaLogsDB));
+app.post("/api/rpa/logs", (req, res) => {
+    const log = { id: rpaLogsDB.length + 1, timestamp: new Date().toLocaleTimeString(), ...req.body };
+    rpaLogsDB.push(log);
+    res.json({ success: true, log });
+});
+
+// RPA Scheduler API
+app.get("/api/rpa/scheduler", (req, res) => res.json(rpaSchedulesDB));
+app.post("/api/rpa/scheduler", (req, res) => {
+    const sch = { id: `SCH-0${rpaSchedulesDB.length + 1}`, ...req.body };
+    rpaSchedulesDB.push(sch);
+    res.json({ success: true, schedule: sch });
+});
+
+// ==========================================
+// WEEKS 4-8 INDUSTRIAL ENTERPRISE REST APIS
+// ==========================================
+app.get("/api/process-mining/variants", (req, res) => {
+    res.json([
+        { id: 'V1', name: 'Standard Order-to-Fulfill', throughputTime: '4.2 hrs' },
+        { id: 'V2', name: 'Exception Rework Variant', throughputTime: '18.6 hrs' }
+    ]);
+});
+
+app.get("/api/digital-twin/telemetry", (req, res) => {
+    res.json({ vibration: 2.4, temperature: 42.1, spindleRPM: 3200, equipmentHealth: 98.2 });
+});
+
+app.get("/api/iiot/devices", (req, res) => {
+    res.json([
+        { id: 'DEV-101', name: 'Siemens S7-1500 PLC', protocol: 'OPC UA', status: 'ONLINE' },
+        { id: 'DEV-104', name: 'NVIDIA Jetson Orin Edge Node', protocol: 'MQTT', status: 'ONLINE' }
+    ]);
+});
+
+app.get("/api/computer-vision/defects", (req, res) => {
+    res.json([
+        { id: 1, label: 'Gear Surface Crack', confidence: '99.4%', isDefect: true },
+        { id: 2, label: 'Worker Safety Helmet', confidence: '98.1%', isDefect: false }
+    ]);
+});
+
+app.get("/api/copilot-agents/swarm", (req, res) => {
+    res.json([
+        { name: 'Planner Agent', status: 'ACTIVE', decisionScore: 99.1 },
+        { name: 'Supervisor Agent', status: 'ACTIVE', decisionScore: 100.0 }
+    ]);
+});
+
 const PORT = 5000;
 app.listen(PORT, () => {
     console.log(`Backend server is running on port ${PORT}`);

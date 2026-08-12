@@ -1,0 +1,96 @@
+/* Process Mining & AI Intelligence Styles */
+
+.pm-container {
+    padding: 1.5rem;
+    color: #e2e8f0;
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+    background: radial-gradient(circle at 50% 10%, rgba(15, 23, 42, 0.9) 0%, rgba(5, 21, 21, 0.95) 100%);
+}
+
+.pm-card {
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    margin-bottom: 1.25rem;
+}
+
+.pm-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.pm-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+@media (max-width: 768px) {
+    .pm-grid-2 { grid-template-columns: 1fr; }
+}
+
+.pm-btn {
+    background: rgba(56, 189, 248, 0.1);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.pm-btn:hover {
+    background: #38bdf8;
+    color: #0f172a;
+}
+
+.pm-btn-primary {
+    background: #38bdf8;
+    color: #0f172a;
+    border: none;
+    font-weight: 700;
+}
+
+.pm-btn-primary:hover {
+    background: #7dd3fc;
+}
+
+/* Variant Graph Node */
+.pm-node {
+    background: rgba(15, 23, 42, 0.95);
+    border: 2px solid #38bdf8;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    color: #f8fafc;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 4px 14px rgba(56, 189, 248, 0.25);
+    position: relative;
+}
+
+.pm-node.bottleneck {
+    border-color: #ef4444;
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.4);
+}
+
+.pm-node-badge {
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 0.7rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    margin-top: 0.3rem;
+    display: inline-block;
+}

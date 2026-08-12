@@ -11,7 +11,7 @@ const ThreeRobotViewer = ({ jointAngles, trajectory = [], gripperOpen = true, is
     const gripperRef = useRef(null);
     const beaconLightsRef = useRef([]);
     const frameCountRef = useRef(0);
-    const lastTimeRef = useRef(performance.now());
+    const lastTimeRef = useRef(0);
     const [fps, setFps] = useState(60);
 
     useEffect(() => {

@@ -9,8 +9,14 @@ const Sidebar = ({ isOpen, toggleSidebar, activeProject, setActiveProject }) => 
     const [showLightbox, setShowLightbox] = useState(false);
 
     const industrialSubItems = [
-        { path: '/industrial-ai/robotics-path-planner', label: 'Week 1 – Robotics Path Planner' },
-        { path: '/industrial-ai/quality-inspection', label: 'Week 2 – Automated Quality Inspection' }
+        { path: '/industrial-ai/robotics-path-planner', label: 'Robotics Path Planner' },
+        { path: '/industrial-ai/quality-inspection', label: 'Automated Quality Inspection' },
+        { path: '/industrial-ai/rpa', label: 'Robotic Process Automation (RPA)' },
+        { path: '/industrial-ai/process-mining', label: 'Process Mining & AI Intelligence' },
+        { path: '/industrial-ai/digital-twin', label: '3D Digital Twin Platform' },
+        { path: '/industrial-ai/iiot', label: 'Industrial IoT & Edge AI' },
+        { path: '/industrial-ai/computer-vision', label: 'Advanced AI Computer Vision' },
+        { path: '/industrial-ai/copilot-agents', label: 'AI Copilot & Multi-Agent AI' }
     ];
 
     const projects = [

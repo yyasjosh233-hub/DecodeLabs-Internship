@@ -326,7 +326,7 @@ const RobotIntelligenceLab = () => {
                                         fill="none" 
                                         stroke="#10B981" 
                                         strokeWidth="2" 
-                                        points={Array.from({ length: 40 }, (_, i) => `${i * 15},${110 + Math.sin(i / 2) * 50 + (Math.random() - 0.5) * 15}`).join(' ')} 
+                                        points={Array.from({ length: 40 }, (_, i) => `${i * 15},${110 + Math.sin(i / 2) * 50 + Math.sin(i * 1.7) * 7}`).join(' ')} 
                                     />
                                     <line x1="0" y1="110" x2="600" y2="110" stroke="rgba(255,255,255,0.1)" strokeDasharray="5,5"/>
                                 </svg>
@@ -340,7 +340,7 @@ const RobotIntelligenceLab = () => {
                                         fill="none" 
                                         stroke="#8B5CF6" 
                                         strokeWidth="2" 
-                                        points={Array.from({ length: 40 }, (_, i) => `${i * 15},${110 + Math.cos(i / 3) * 20 + (Math.random() - 0.5) * 5}`).join(' ')} 
+                                        points={Array.from({ length: 40 }, (_, i) => `${i * 15},${110 + Math.cos(i / 3) * 20 + Math.cos(i * 2.1) * 2.5}`).join(' ')} 
                                     />
                                     <line x1="0" y1="110" x2="600" y2="110" stroke="rgba(255,255,255,0.1)" strokeDasharray="5,5"/>
                                 </svg>

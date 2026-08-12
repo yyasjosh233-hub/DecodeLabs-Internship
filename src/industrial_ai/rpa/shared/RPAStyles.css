@@ -1,0 +1,479 @@
+/* Industrial RPA Module Design System & Glassmorphism Styling */
+
+.rpa-container {
+    padding: 1.5rem;
+    color: #e2e8f0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    background: radial-gradient(circle at 10% 20%, rgba(14, 33, 33, 0.8) 0%, rgba(5, 21, 21, 0.95) 90%);
+}
+
+.rpa-header-card {
+    background: rgba(14, 33, 33, 0.65);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 222, 89, 0.2);
+    border-radius: 14px;
+    padding: 1.25rem 1.75rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.rpa-title-group h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #ffde59;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.rpa-title-group p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+}
+
+.rpa-badge-accent {
+    background: rgba(255, 222, 89, 0.15);
+    color: #ffde59;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 222, 89, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Nav Tabs */
+.rpa-tabs-container {
+    display: flex;
+    gap: 0.5rem;
+    background: rgba(10, 25, 25, 0.8);
+    padding: 0.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
+
+.rpa-tab-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.rpa-tab-btn:hover {
+    color: #f8fafc;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.rpa-tab-btn.active {
+    background: #ffde59;
+    color: #051515;
+    box-shadow: 0 4px 14px rgba(255, 222, 89, 0.25);
+    font-weight: 700;
+}
+
+/* Grid & Cards */
+.rpa-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.rpa-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .rpa-grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+.rpa-card {
+    background: rgba(14, 33, 33, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.rpa-card:hover {
+    border-color: rgba(255, 222, 89, 0.3);
+}
+
+.rpa-metric-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.rpa-metric-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: rgba(255, 222, 89, 0.1);
+    border: 1px solid rgba(255, 222, 89, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.rpa-metric-info h4 {
+    color: #94a3b8;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.rpa-metric-val {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.2;
+}
+
+.rpa-sub-val {
+    font-size: 0.75rem;
+    color: #10b981;
+    margin-top: 0.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+/* Status Indicators */
+.rpa-status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.rpa-status-running {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.rpa-status-idle {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.rpa-status-failed {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.rpa-status-paused {
+    background: rgba(148, 163, 184, 0.15);
+    color: #cbd5e1;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.rpa-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.rpa-dot-running { background: #34d399; box-shadow: 0 0 8px #34d399; }
+.rpa-dot-idle { background: #fbbf24; }
+.rpa-dot-failed { background: #f87171; box-shadow: 0 0 8px #f87171; }
+.rpa-dot-paused { background: #cbd5e1; }
+
+/* Action Buttons */
+.rpa-btn {
+    background: rgba(255, 222, 89, 0.1);
+    color: #ffde59;
+    border: 1px solid rgba(255, 222, 89, 0.3);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.2s ease;
+}
+
+.rpa-btn:hover {
+    background: #ffde59;
+    color: #051515;
+}
+
+.rpa-btn-primary {
+    background: #ffde59;
+    color: #051515;
+    border: none;
+    box-shadow: 0 4px 12px rgba(255, 222, 89, 0.25);
+}
+
+.rpa-btn-primary:hover {
+    background: #ffe680;
+}
+
+.rpa-btn-danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.rpa-btn-danger:hover {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+.rpa-btn-sm {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+}
+
+/* Tables */
+.rpa-table-wrapper {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rpa-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    text-align: left;
+}
+
+.rpa-table th {
+    background: rgba(5, 21, 21, 0.9);
+    color: #ffde59;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rpa-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: #cbd5e1;
+}
+
+.rpa-table tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Workflow Builder Canvas */
+.rpa-workflow-builder {
+    display: grid;
+    grid-template-columns: 240px 1fr 280px;
+    gap: 1rem;
+    min-height: 550px;
+    height: calc(100vh - 280px);
+}
+
+@media (max-width: 1024px) {
+    .rpa-workflow-builder {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+}
+
+.rpa-palette {
+    background: rgba(10, 25, 25, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.rpa-palette-block {
+    background: rgba(14, 33, 33, 0.9);
+    border: 1px solid rgba(255, 222, 89, 0.2);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 0.5rem;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    transition: all 0.2s ease;
+}
+
+.rpa-palette-block:hover {
+    border-color: #ffde59;
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.rpa-canvas {
+    background: radial-gradient(rgba(255, 222, 89, 0.05) 1px, transparent 0);
+    background-size: 24px 24px;
+    background-color: #071919;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    position: relative;
+    overflow: auto;
+    padding: 2rem;
+    min-height: 500px;
+}
+
+.rpa-canvas-node {
+    position: absolute;
+    min-width: 170px;
+    background: rgba(14, 33, 33, 0.95);
+    border: 2px solid rgba(255, 222, 89, 0.4);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    z-index: 2;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.rpa-canvas-node.selected {
+    border-color: #ffde59;
+    box-shadow: 0 0 16px rgba(255, 222, 89, 0.5);
+}
+
+.rpa-canvas-node.executing {
+    border-color: #10b981;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+    animation: nodePulse 1.2s infinite alternate;
+}
+
+@keyframes nodePulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.04); }
+}
+
+.rpa-config-panel {
+    background: rgba(10, 25, 25, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+/* Forms */
+.rpa-input-group {
+    margin-bottom: 1rem;
+}
+
+.rpa-input-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #94a3b8;
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+}
+
+.rpa-input {
+    width: 100%;
+    background: rgba(5, 21, 21, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    color: #ffffff;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.rpa-input:focus {
+    border-color: #ffde59;
+}
+
+/* Modal */
+.rpa-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.rpa-modal {
+    background: #0e2121;
+    border: 1px solid rgba(255, 222, 89, 0.3);
+    border-radius: 14px;
+    width: 90%;
+    max-width: 600px;
+    padding: 1.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+.rpa-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rpa-modal-header h3 {
+    color: #ffde59;
+    margin: 0;
+}
+
+/* Log console */
+.rpa-log-stream {
+    background: #030d0d;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.8rem;
+    padding: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+    color: #a7f3d0;
+}
+
+.rpa-log-row {
+    padding: 0.2rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.rpa-log-INFO { color: #60a5fa; }
+.rpa-log-WARN { color: #fbbf24; }
+.rpa-log-ERROR { color: #f87171; }
+.rpa-log-SUCCESS { color: #34d399; }

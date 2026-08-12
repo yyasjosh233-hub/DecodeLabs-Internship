@@ -1,0 +1,71 @@
+/* Industrial Computer Vision Styles */
+
+.cv-container {
+    padding: 1.5rem;
+    color: #e2e8f0;
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+    background: radial-gradient(circle at 10% 80%, rgba(236, 72, 153, 0.1) 0%, rgba(5, 21, 21, 0.95) 100%);
+}
+
+.cv-card {
+    background: rgba(83, 15, 50, 0.25);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(236, 72, 153, 0.3);
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    margin-bottom: 1.25rem;
+}
+
+.cv-badge {
+    background: rgba(236, 72, 153, 0.15);
+    color: #f472b6;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border: 1px solid rgba(236, 72, 153, 0.3);
+}
+
+.cv-video-frame {
+    width: 100%;
+    height: 360px;
+    background: #090d16;
+    border-radius: 10px;
+    border: 2px solid rgba(236, 72, 153, 0.4);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.cv-bbox {
+    position: absolute;
+    border: 2px solid #34d399;
+    background: rgba(52, 211, 153, 0.15);
+    border-radius: 4px;
+}
+
+.cv-bbox-danger {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.2);
+}
+
+.cv-bbox-label {
+    position: absolute;
+    top: -20px;
+    left: -2px;
+    background: #34d399;
+    color: #051515;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px 3px 0 0;
+}
+
+.cv-bbox-danger .cv-bbox-label {
+    background: #ef4444;
+    color: #ffffff;
+}
