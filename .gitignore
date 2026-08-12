@@ -45,3 +45,4 @@ ENV/
 *.njsproj
 *.sln
 *.sw?
+.pytest_cache/
