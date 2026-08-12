@@ -1,9 +1,9 @@
 # DecodeLabs Internship Projects — Industrial Automation & Robotics Platform
 
-[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](https://github.com/yyasjosh233-hub/DecodeLabs-Internship)
-[![Test Suite](https://img.shields.io/badge/Tests-144%20Passed-success.svg)](https://github.com/yyasjosh233-hub/DecodeLabs-Internship)
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](https://github.com/yyasjosh233)
+[![Test Suite](https://img.shields.io/badge/Tests-144%20Passed-success.svg)](https://github.com/yyasjosh233)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![DecodeLabs](https://img.shields.io/badge/DecodeLabs-Internship%20Submission-orange.svg)](https://github.com/yyasjosh233-hub/DecodeLabs-Internship)
+[![DecodeLabs](https://img.shields.io/badge/DecodeLabs-Internship%20Submission-orange.svg)](https://github.com/yyasjosh233)
 
 A production-grade, multi-module industrial automation engineering platform developed for the **DecodeLabs Internship Program**. This repository contains full-stack implementations of three advanced industrial robotics & computer vision systems:
 
@@ -275,4 +275,4 @@ Comprehensive project and API documentation is located in the [`docs/`](docs/) d
 - [x] Project 3: Custom A* pathfinding with Manhattan heuristic verified
 - [x] Project 3: Dynamic obstacle detection, Tanh deceleration & reflex re-planning verified
 - [x] Source files in `src/industrial_ai/` verified and tested
-- [x] Git remote synced to `https://github.com/yyasjosh233-hub/DecodeLabs-Internship.git` on `main` branch
+- [x] Git remote synced on `main` branch
