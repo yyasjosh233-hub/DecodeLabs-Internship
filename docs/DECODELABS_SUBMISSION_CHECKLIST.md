@@ -21,4 +21,4 @@
 | **REQ-17** | TypeScript & React Build Cleanliness | ✅ PASSED | `npm run build` succeeds with zero errors |
 | **REQ-18** | Test Suite Execution | ✅ PASSED | 106 TypeScript tests + 38 Python unit tests (144 total PASS) |
 | **REQ-19** | Mandatory Documentation & Screenshots | ✅ PASSED | `README.md`, `docs/`, 10 high-resolution screenshots |
-| **REQ-20** | Git Synchronization & Remote Branch | ✅ PASSED | Synced to `main` branch |
+| **REQ-20** | Git Synchronization & Remote Branch | ✅ PASSED | Synced to `main` branch on `https://github.com/yyasjosh233-hub/DecodeLabs-Internship.git` |
