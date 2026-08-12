@@ -40,6 +40,7 @@ import DigitalTwinPage from './industrial_ai/digital_twin/DigitalTwinPage';
 import IIoTPage from './industrial_ai/iiot/IIoTPage';
 import ComputerVisionPage from './industrial_ai/computer_vision/ComputerVisionPage';
 import CopilotAgentsPage from './industrial_ai/copilot_agents/CopilotAgentsPage';
+import AMRNavigationPage from './industrial_ai/amr_navigation/AMRNavigationPage';
 
 // Public layout wrapper
 const PublicLayout = () => {
@@ -130,6 +131,7 @@ function App() {
             <Route path="/industrial-ai/iiot" element={<IIoTPage />} />
             <Route path="/industrial-ai/computer-vision" element={<ComputerVisionPage />} />
             <Route path="/industrial-ai/copilot-agents" element={<CopilotAgentsPage />} />
+            <Route path="/industrial-ai/amr-navigation" element={<AMRNavigationPage />} />
           </Route>
 
           {/* Fallback to Platform Workspace */}

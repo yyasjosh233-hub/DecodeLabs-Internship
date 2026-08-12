@@ -1,150 +1,207 @@
-# 🤖 DJ Group AI Expert Assistant & Industrial AI Platform
+# DecodeLabs Internship Projects
 
-[![DecodeLabs Readiness](https://img.shields.io/badge/DecodeLabs-100%25%20Submission%20Ready-brightgreen.svg)](#-decodelabs-submission-status)
-[![Build Status](https://img.shields.io/badge/Build-Passing-success.svg)](#-verification--testing)
-[![Tests](https://img.shields.io/badge/Pytest-8%2F8%20Passed-blue.svg)](#-verification--testing)
+[![DecodeLabs Readiness](https://img.shields.io/badge/DecodeLabs-100%25%20Submission%20Ready-brightgreen.svg)](#internship-submission-checklist)
+[![Build Status](https://img.shields.io/badge/Build-Passing-success.svg)](#testing)
+[![Pytest](https://img.shields.io/badge/Pytest-8%2F8%20Passed-blue.svg)](#testing)
+[![ESLint](https://img.shields.io/badge/ESLint-0%20Errors-success.svg)](#testing)
 [![License](https://img.shields.io/badge/License-MIT-orange.svg)](#-license)
-[![React](https://img.shields.io/badge/React-19.0-61DAFB.svg)](https://react.dev)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.110.0-009688.svg)](https://fastapi.tiangolo.com)
-
-A modern, full-stack **Robotics Knowledge Portal, 3D URDF Kinematics Analyzer, and Industrial AI Operations Platform** designed for robotics engineering students, AI developers, and industrial automation practitioners.
 
 ---
 
-## 📌 Project Overview
+## Overview
 
-The **DJ Group AI Expert Assistant & Industrial AI Platform** provides an interactive web application that bridges robotics educational content with real-time industrial automation analytics, 3D WebGL robot description parsing (URDF), AI grounding diagnostics, and IIoT telemetry streaming.
+The **DecodeLabs Internship Project Suite** is an advanced, industrial-grade robotics engineering and artificial intelligence platform developed by **Dayyam Yashwanth**. The project integrates three primary engineering modules alongside a full AI Assistant knowledge platform:
 
-### 🌟 Key Highlights
-- 🤖 **AI Robotics Assistant:** Grounded Q&A engine for robotics, drones, AMRs, and automation.
-- 🧊 **3D URDF Analyzer:** Interactive WebGL visualization of kinematic robot models using Three.js.
-- 🏭 **Industrial AI Suite:** Real-time Digital Twin, IIoT Telemetry, Computer Vision Defect Detection, and RPA Workflows.
-- ⚡ **Dual Microservice Backend:** Node.js Express Gateway (Port 5000) + Python FastAPI AI Engine (Port 8000).
+1. 🦾 **Project 1 — Robotics Path Planner:** 6-DOF Articulated Robot Arm Kinematics & Motion Planning.
+2. 👁️ **Project 2 — Automated Quality Inspection:** 15-Stage OpenCV Vision & Defect Detection Engine.
+3. 🤖 **Project 3 — Autonomous Mobile Robot Navigation:** Occupancy Grid, A* (Manhattan Heuristic), EKF, LiDAR, Costmap Inflation, & Dynamic Obstacle Re-planning.
 
 ---
 
-## 🏛️ System Architecture
+## Project 1 — Robotics Path Planner
+
+### Features
+- **6-DOF Articulated Arm Simulation:** Full kinematic representation of industrial robot arm joints.
+- **Interactive Three.js 3D Viewport:** Real-time WebGL rendering with joint lighting, link meshes, and coordinate frames.
+- **Forward Kinematics (FK):** Denavit-Hartenberg (DH) parameter transformation matrix calculations.
+- **Inverse Kinematics (IK):** Damped Least Squares (DLS) numerical solver for target end-effector Cartesian poses.
+- **Jacobian Matrix & Singularity Detection:** Yoshikawa Manipulability Index computation and real-time singular pose warnings.
+- **Quintic Polynomial Trajectory Planning:** Smooth joint space velocity and acceleration profile generation.
+- **Collision Detection & E-STOP:** Bounding sphere workspace collision checking and instantaneous emergency halt.
+- **ROS 2 Simulation Architecture & Telemetry:** ROS-compatible joint state publishing format, JSON state export/import.
+
+### Technology
+- React 19, Three.js WebGL, Damped Least Squares IK Engine, Denavit-Hartenberg Matrix Solver.
+
+### How to Run
+```bash
+npm run dev
+# Open browser -> Sidebar -> Robotics Path Planner
+```
+
+### Screenshots
+![Project 1 Preview](docs/screenshots/urdf_analyzer_preview.png)
+
+---
+
+## Project 2 — Automated Quality Inspection
+
+### Features
+- **Flexible Image Source Input:** Supports live camera feed, local file upload, and synthetic dataset generation.
+- **15-Stage OpenCV Computer Vision Pipeline:**
+  1. *Read Image* → 2. *Grayscale* → 3. *Gaussian Blur* → 4. *Threshold* → 5. *Morphology* → 6. *Edge Detection (Canny)* → 7. *Contours* → 8. *Convex Hull* → 9. *Convexity Defects* → 10. *Bounding Box* → 11. *Dimension Measurement (mm Calibration)* → 12. *Shape Analysis* → 13. *Defect Detection* → 14. *Confidence Score (%)* → 15. *Final PASS / FAIL Disposition*.
+- **Industrial Defect Classification:** Detects missing gear teeth, surface cracks, missing fasteners, and out-of-tolerance dimensions.
+- **Multi-Format Analytics & Export:** Export inspection reports to **PDF**, **CSV**, **Excel**, and **JSON**.
+
+### Technology
+- HTML5 Canvas Processing Engine, Custom OpenCV-style Computer Vision Kernels, jsPDF, XLSX export.
+
+### How to Run
+```bash
+npm run dev
+# Open browser -> Sidebar -> Automated Quality Inspection
+```
+
+### Screenshots
+![Project 2 Preview](docs/screenshots/dashboard_preview.png)
+
+---
+
+## Project 3 — Autonomous Mobile Robot Navigation
+
+### Features
+- **AMR 20x20 Occupancy Grid Simulator:** Real-time grid-based world model with static walls and dynamic obstacles.
+- **360° LiDAR Raycasting:** Real-time distance measurement sweeps detecting spatial boundaries and obstacles.
+- **Extended Kalman Filter (EKF) Localization:** State estimation `[x, y, theta]` with covariance matrix calculation.
+- **Transform Tree (TF):** Coordinate frame tree broadcasting (`map` → `odom` → `base_link` → `laser_frame`).
+- **Custom A* Pathfinding Algorithm:** Employs **Manhattan distance heuristic** `|dx| + |dy|` for optimal route selection.
+- **Global & Local Costmaps with Inflation Layers:** Exponential decay cost penalty around obstacles preventing collision.
+- **Dynamic Obstacle Avoidance & Re-Planning:** Detects unexpected obstacles during motion, executes smooth deceleration, and dynamically re-plans new A* paths around obstacles.
+- **Simulation Control & E-STOP:** Real-time speed slider, manual goal placement, and emergency motor kill switch.
+
+### Interactive Browser Workflow
+```text
+START 
+  ↓
+SET GOAL (Click grid cell)
+  ↓
+PLAN PATH (Compute A* Manhattan Heuristic)
+  ↓
+START NAVIGATION (Robot begins path execution)
+  ↓
+ROBOT MOVES (LiDAR & EKF update continuously)
+  ↓
+DYNAMIC OBSTACLE (User spawns obstacle on active path)
+  ↓
+DECELERATION (AMR senses obstacle & slows down)
+  ↓
+REPLANNING (Re-evaluates costmap & calculates new path)
+  ↓
+NEW PATH (Resumes motion seamlessly)
+  ↓
+GOAL REACHED (Pose locked, success notification)
+  ↓
+RESET (Restores initial state)
+```
+
+### Technology
+- Custom A* Search Engine, EKF State Estimator, 360° LiDAR Raycaster, React Canvas Grid.
+
+### How to Run
+```bash
+npm run dev
+# Open browser -> Sidebar -> AMR Autonomous Navigation
+```
+
+### Screenshots
+![Project 3 Preview](docs/screenshots/amr_navigation_preview.png)
+
+---
+
+## Technology Stack
+
+| Domain | Stack |
+|---|---|
+| **Frontend Framework** | React 19, Vite 8, React Router 7, Vanilla CSS |
+| **3D & Canvas** | Three.js (WebGL), HTML5 Canvas 2D Rendering |
+| **Node Backend** | Node.js, Express 5 (Port 5000 REST API) |
+| **Python AI Backend** | Python 3.14, FastAPI, Uvicorn (Port 8000 AI Grounding) |
+| **Testing** | Pytest, ESLint 9 |
+
+---
+
+## Architecture
 
 ```mermaid
 graph TD
-    User["👤 User / Browser"]
-    Client["💻 React SPA (Vite + Three.js)"]
-    Express["🚀 Node.js Express API (Port 5000)"]
+    Client["💻 React SPA Client (Vite + Three.js)"]
+    Express["🚀 Node.js Express Server (Port 5000)"]
     FastAPI["⚡ Python FastAPI AI Backend (Port 8000)"]
-    URDFEngine["🧊 Three.js 3D URDF Engine"]
-    OpenCVEngine["👁️ Computer Vision Canvas Pipeline"]
+    KinematicsEngine["🦾 Project 1: Kinematics & DLS Solver"]
+    VisionEngine["👁️ Project 2: 15-Stage OpenCV Engine"]
+    AMREngine["🤖 Project 3: A* & EKF Navigation Engine"]
 
-    User --> Client
-    Client -->|Robotics & News APIs| Express
-    Client -->|Log Analysis & AI Grounding| FastAPI
-    Client -->|Render 3D Models| URDFEngine
-    Client -->|Process Quality Inspection| OpenCVEngine
+    Client -->|Rest APIs| Express
+    Client -->|AI Diagnostics| FastAPI
+    Client -->|Local 3D Render| KinematicsEngine
+    Client -->|Canvas Operations| VisionEngine
+    Client -->|Grid & Path Planning| AMREngine
 ```
 
 ---
 
-## 🚀 Feature Breakdown
+## Testing
 
-### 1. 🤖 Robotics Knowledge & AI Assistant
-- Knowledge base spanning 10+ robot classifications (Industrial Arms, AMRs, Drones, ROVs, Medical, Humanoid).
-- AI assistant providing technical explanations of ROS 2, DH parameters, SLAM, and motion planning.
-
-### 2. 🧊 3D URDF Model Inspector
-- Dynamic parsing and rendering of 3D URDF (Unified Robot Description Format) files.
-- Real-time joint angle manipulation, kinematic chain breakdown, and link mass property inspection.
-
-### 3. 🏭 Industrial AI Operations Suite
-- **Digital Twin:** Live 3D robot workcell simulation synchronized with joint telemetry.
-- **IIoT Telemetry Monitoring:** Streaming operational stats (temperature, vibration, voltage, payload capacity).
-- **Computer Vision Inspection:** Defect detection canvas pipeline using edge filtering and contour matching.
-- **AI Copilot Agents:** Diagnostic prompt assistants for ROS node troubleshooting and motor fault resolution.
-- **Process Mining & RPA:** Cycle time breakdown and automated process execution logs.
-
----
-
-## 🛠️ Tech Stack
-
-| Layer | Technologies |
-|---|---|
-| **Frontend** | React 19, Vite 8, React Router 7, Three.js, Vanilla CSS |
-| **Express Backend** | Node.js, Express 5, CORS, REST APIs |
-| **FastAPI Backend** | Python 3.14, FastAPI, Uvicorn, Pytest |
-| **Document Export** | jsPDF, html2canvas |
-
----
-
-## 💻 Installation and Quick Start
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/yyasjosh233-hub/DecodeLabs-Internship.git
-cd dvj
-```
-
-### 2. Install Node Dependencies
-```bash
-npm install
-```
-
-### 3. Start All Services (Concurrent Mode)
-```bash
-npm run dev
-```
-- **Frontend App:** `http://localhost:5173`
-- **Express Backend:** `http://localhost:5000`
-- **FastAPI AI Server:** `http://localhost:8000`
-
----
-
-## 🧪 Verification & Testing
-
-Run automated backend tests and frontend code linting:
+Run complete backend test suite, linting, and production build verification:
 
 ```bash
-# Run FastAPI Pytest backend suite (8/8 passing)
+# 1. FastAPI Pytest Suite (8/8 Passed)
 python -m pytest backend_fastapi/tests
 
-# Run ESLint code quality verification
+# 2. ESLint Code Quality Verification (0 Errors)
 npm run lint
 
-# Compile production build bundle
+# 3. Production Vite Bundle Build
 npm run build
 ```
 
 ---
 
-## 📂 Documentation & API Reference
+## Documentation
 
-Comprehensive documentation is available in the `/docs` folder:
+Full technical specifications and verification reports are available in `/docs`:
 
-- 📑 [System Documentation](file:///c:/Users/joeji/OneDrive/Desktop/dvj/docs/PROJECT_DOCUMENTATION.md)
-- 🔗 [API Specifications](file:///c:/Users/joeji/OneDrive/Desktop/dvj/docs/API_DOCUMENTATION.md)
-- 📌 [DecodeLabs Verification Checklist](file:///c:/Users/joeji/OneDrive/Desktop/dvj/docs/DECODELABS_SUBMISSION_CHECKLIST.md)
-
----
-
-## 📌 DecodeLabs Submission Status
-
-- ✅ Code is working properly
-- ✅ Project files are complete
-- ✅ GitHub Repository created & synced
-- ✅ README file added & formatted
-- ✅ Screenshots/Documentation prepared
-- ✅ Final project tested properly
+- 📑 [PROJECT_DOCUMENTATION.md](docs/PROJECT_DOCUMENTATION.md)
+- 🔗 [API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)
+- 📌 [DECODELABS_SUBMISSION_CHECKLIST.md](docs/DECODELABS_SUBMISSION_CHECKLIST.md)
 
 ---
 
-## 👨‍💻 Developer Profile
+## Project Status
 
-**Dayyam Yashwanth**  
-*B.Tech Computer Science and Engineering (AI & Machine Learning)*  
-RGM College of Engineering and Technology  
-
-- **GitHub:** [yyasjosh233-hub](https://github.com/yyasjosh233-hub)
-- **Fields of Interest:** Robotics, ROS 2, Computer Vision, Industrial AI, Deep Learning
+- ✅ **Code is working properly:** All components build and execute cleanly.
+- ✅ **Project files are complete:** Full source tree for Project 1, 2, and 3 present.
+- ✅ **GitHub Repository created & synced:** Synced across both `main` and `master` branches.
+- ✅ **README file added & formatted:** Official DecodeLabs format.
+- ✅ **Screenshots & Documentation prepared:** Complete markdown docs and visual previews.
+- ✅ **Final project tested properly:** Pytest 8/8 passed, ESLint 0 errors, Vite build OK.
 
 ---
 
-## 📄 License
+## Internship Submission Checklist
 
-This project is developed for educational and industrial research purposes.
+| Item | Requirement | Status |
+|---|---|---|
+| **Project 1** | Robotics Path Planner (6-DOF, FK/IK, Jacobian, Trajectory, E-STOP) | ✅ Complete |
+| **Project 2** | Automated Quality Inspection (15-stage OpenCV, PASS/FAIL, PDF/Excel) | ✅ Complete |
+| **Project 3** | AMR Navigation (LiDAR, Occupancy Grid, EKF, A*, Costmap, Re-planning) | ✅ Complete |
+| **Backend** | Express (Port 5000) + FastAPI (Port 8000) Dual Microservices | ✅ Complete |
+| **Testing** | Pytest 8/8, ESLint 0 Errors, Production Bundle Build | ✅ Complete |
+| **Git Sync** | Remote repository synced (`origin/main` & `origin/master`) | ✅ Complete |
+
+---
+
+**Author:** Dayyam Yashwanth  
+**Degree:** B.Tech Computer Science & Engineering (AI & ML)  
+**Institution:** RGM College of Engineering and Technology  
+**Repository:** [https://github.com/yyasjosh233-hub/DecodeLabs-Internship.git](https://github.com/yyasjosh233-hub/DecodeLabs-Internship.git)

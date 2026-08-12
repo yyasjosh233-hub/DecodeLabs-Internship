@@ -11,6 +11,7 @@ const Sidebar = ({ isOpen, toggleSidebar, activeProject, setActiveProject }) => 
     const industrialSubItems = [
         { path: '/industrial-ai/robotics-path-planner', label: 'Robotics Path Planner' },
         { path: '/industrial-ai/quality-inspection', label: 'Automated Quality Inspection' },
+        { path: '/industrial-ai/amr-navigation', label: 'AMR Autonomous Navigation' },
         { path: '/industrial-ai/rpa', label: 'Robotic Process Automation (RPA)' },
         { path: '/industrial-ai/process-mining', label: 'Process Mining & AI Intelligence' },
         { path: '/industrial-ai/digital-twin', label: '3D Digital Twin Platform' },
