@@ -1,0 +1,22 @@
+{
+  "id": "TEST-INS-8aff83",
+  "timestamp": "2026-08-09T10:05:00",
+  "filename": "good_gear.png",
+  "product_type": "Gear",
+  "result": "PASS",
+  "defect": "None",
+  "confidence": 0.98,
+  "total_time_ms": 30.0,
+  "width_mm": 50.0,
+  "height_mm": 50.0,
+  "area_mm2": 1963.5,
+  "stages": [
+    {
+      "number": 1,
+      "name": "Read Image",
+      "time_ms": 2.0,
+      "status": "PASS",
+      "explanation": "OK"
+    }
+  ]
+}

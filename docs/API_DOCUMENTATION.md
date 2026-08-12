@@ -1,128 +1,139 @@
-# 🔗 DJ Group AI & Industrial Robotics API Reference Documentation
+# DecodeLabs Internship — API Reference Documentation
 
-> **DecodeLabs Internship Project Submission**  
-> **Backend Architecture:** Dual Microservices (Express Gateway + FastAPI AI Service)
+## Overview
 
----
-
-## 📌 Microservice Endpoint Summary
-
-| Service | Port | Base URL | Primary Role |
-|---|---|---|---|
-| **Express Gateway** | `5000` | `http://localhost:5000` | Core Robotics Knowledge, Articles, Assistant |
-| **FastAPI AI Engine** | `8000` | `http://localhost:8000` | Grounding, Log Diagnostics, Trajectory Analytics |
+The DecodeLabs Industrial Automation Portal provides RESTful API endpoints for Quality Inspection, AMR Navigation, Robotics Kinematics, and System Telemetry.
 
 ---
 
-## 1. 🚀 Node.js / Express API Endpoints (Port 5000)
+## 1. Project 2 — Quality Inspection API
 
-### 1.1 Get Robotics Knowledge Base
-- **Endpoint:** `GET /api/robotics`
-- **Description:** Returns a structured list of robot classifications, specifications, and applications.
-- **Response Format:**
+### 1.1 Process Image Inspection
+- **Endpoint**: `POST /api/inspect`
+- **Content-Type**: `multipart/form-data`
+- **Request Body**:
+  - `file`: Image file (`.png`, `.jpg`, `.jpeg`)
+- **Response** `200 OK`:
   ```json
-  [
-    {
-      "id": "industrial_robots",
-      "title": "Industrial Robots",
-      "description": "High-precision articulated arms used in manufacturing, welding, and assembly.",
-      "applications": ["Automotive Assembly", "Spot Welding", "Palletizing"]
+  {
+    "status": "success",
+    "inspection_id": "INS-618AA998",
+    "verdict": "PASS",
+    "confidence": 0.984,
+    "measurements": {
+      "outer_diameter_mm": 120.04,
+      "pitch_circle_mm": 95.01,
+      "concentricity_error_mm": 0.032
+    },
+    "defects": [],
+    "annotated_image_url": "/static/processed/annotated_INS-618AA998.png"
+  }
+  ```
+
+### 1.2 Multi-Format Report Generation
+- **Endpoint**: `GET /api/reports/download/<inspection_id>/<format>`
+- **URL Parameters**:
+  - `inspection_id`: String (e.g. `INS-618AA998`)
+  - `format`: `pdf` | `csv` | `xlsx` | `json`
+- **Response**: Binary File Download (`application/pdf`, `text/csv`, `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, `application/json`).
+
+---
+
+## 2. Project 3 — AMR Navigation API
+
+### 2.1 Get AMR State
+- **Endpoint**: `GET /api/amr/state`
+- **Response** `200 OK`:
+  ```json
+  {
+    "status": "success",
+    "state": {
+      "mode": "SIMULATION",
+      "nav_status": "NAVIGATING_TO_GOAL",
+      "ekf_pose": { "x": 4.25, "y": 2.10, "yaw": 0.785 },
+      "velocity": { "linear": 0.45, "angular": 0.02 },
+      "battery_percent": 94.5,
+      "path": [[0.5, 0.5], [1.0, 1.0], [4.25, 2.10]],
+      "dynamic_obstacle_active": false
     }
-  ]
-  ```
-
-### 1.2 Robotics AI Assistant Endpoint
-- **Endpoint:** `POST /api/assistant`
-- **Description:** Accepts natural language questions regarding robotics, drones, and automation.
-- **Request Body:**
-  ```json
-  {
-    "question": "What is the difference between AMR and AGV?"
-  }
-  ```
-- **Response Format:**
-  ```json
-  {
-    "answer": "Autonomous Mobile Robots (AMRs) navigate dynamically using onboard LiDAR and SLAM, whereas Automated Guided Vehicles (AGVs) rely on fixed magnetic strips or markers.",
-    "category": "mobile_robotics",
-    "timestamp": "2026-08-12T17:40:00Z"
   }
   ```
 
-### 1.3 Robotics News & Articles
-- **Endpoint:** `GET /api/articles`
-- **Description:** Retrieves educational articles on ROS 2, computer vision, kinematics, and deep learning.
-
-### 1.4 System Health Check
-- **Endpoint:** `GET /api/status`
-- **Response Format:**
+### 2.2 Set Navigation Goal
+- **Endpoint**: `POST /api/amr/set_goal`
+- **Headers**: `Content-Type: application/json`
+- **Request Body**:
   ```json
   {
-    "status": "online",
-    "uptime": 3600,
-    "service": "DJ-Group-Express-Backend"
+    "x": 8.5,
+    "y": 6.0
+  }
+  ```
+- **Response** `200 OK`:
+  ```json
+  {
+    "status": "success",
+    "message": "Goal updated successfully",
+    "plan": {
+      "path_nodes": 42,
+      "path_length_m": 11.2,
+      "planning_time_ms": 3.8
+    }
+  }
+  ```
+
+### 2.3 Trigger Dynamic Obstacle Injection
+- **Endpoint**: `POST /api/amr/inject_obstacle`
+- **Headers**: `Content-Type: application/json`
+- **Request Body**:
+  ```json
+  {
+    "x": 4.5,
+    "y": 2.2,
+    "radius": 0.4
+  }
+  ```
+- **Response** `200 OK`:
+  ```json
+  {
+    "status": "success",
+    "obstacle": { "id": "dyn-1", "x": 4.5, "y": 2.2 },
+    "replanned": true,
+    "deceleration_active": true
+  }
+  ```
+
+### 2.4 Emergency Stop & Reset
+- **Endpoint**: `POST /api/amr/estop`
+- **Response** `200 OK`:
+  ```json
+  {
+    "status": "success",
+    "nav_status": "EMERGENCY_STOP",
+    "velocity": { "linear": 0.0, "angular": 0.0 }
   }
   ```
 
 ---
 
-## 2. ⚡ Python FastAPI AI Endpoints (Port 8000)
+## 3. Project 1 — Robotics Kinematics API (ROS 2 Bridge)
 
-### 2.1 Service Health
-- **Endpoint:** `GET /health`
-- **Response Format:**
+### 3.1 Inverse Kinematics Endpoint
+- **Endpoint**: `POST /api/robotics/ik`
+- **Headers**: `Content-Type: application/json`
+- **Request Body**:
   ```json
   {
-    "status": "healthy",
-    "version": "1.0.0"
+    "target_pose": { "x": 0.4, "y": 0.2, "z": 0.5, "roll": 0, "pitch": 0, "yaw": 0 },
+    "seed_joints": { "q1": 0, "q2": 0, "q3": 0, "q4": 0, "q5": 0, "q6": 0 }
   }
   ```
-
-### 2.2 ROS Log Diagnostic Analysis
-- **Endpoint:** `POST /api/diagnostics/analyze-log`
-- **Description:** Parses raw ROS / ROS 2 console outputs and extracts errors, warnings, stack traces, and affected nodes.
-- **Request Body:**
+- **Response** `200 OK`:
   ```json
   {
-    "log_text": "[ERROR] [1710000000.123]: Controller joint_trajectory_controller failed due to motor over-temperature warning on Joint 3."
+    "success": true,
+    "solution": { "q1": 26.57, "q2": -18.42, "q3": 34.15, "q4": 0.0, "q5": 44.27, "q6": -26.57 },
+    "error_distance_mm": 1.2,
+    "iterations": 14
   }
   ```
-- **Response Format:**
-  ```json
-  {
-    "severity": "HIGH",
-    "affected_node": "joint_trajectory_controller",
-    "root_cause": "Thermal threshold exceeded on motor joint 3",
-    "suggested_actions": ["Cool down actuator", "Reduce joint velocity profile", "Check encoder feedback"]
-  }
-  ```
-
-### 2.3 Knowledge Grounding Query
-- **Endpoint:** `POST /api/grounding/query`
-- **Description:** Executes grounded AI retrieval against verified robotics engineering documentation.
-- **Request Body:**
-  ```json
-  {
-    "query": "DH parameters for 6-DOF PUMA 560"
-  }
-  ```
-- **Response Format:**
-  ```json
-  {
-    "grounded": true,
-    "source": "Standard Kinematic Database",
-    "confidence": 0.98,
-    "content": "PUMA 560 joint parameters: theta_1..6, d_1..6, a_1..6, alpha_1..6..."
-  }
-  ```
-
-### 2.4 Claim Verification Endpoint
-- **Endpoint:** `POST /api/grounding/verify-claim`
-- **Description:** Validates user or AI-generated statements against physical kinematic laws.
-
----
-
-## 🧪 Interactive Swagger Documentation
-
-When running the FastAPI server, interactive OpenAPI / Swagger UI documentation is available at:
-`http://localhost:8000/docs`

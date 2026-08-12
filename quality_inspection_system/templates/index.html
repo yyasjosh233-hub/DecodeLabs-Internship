@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Quality Inspection System | Industrial Computer Vision</title>
+    <!-- Google Fonts & Chart.js -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="industrial-theme">
+
+    <!-- TOP NAVIGATION BAR -->
+    <nav class="platform-nav">
+        <a class="nav-logo" href="/">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00F0FF" stroke-width="2">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            INDUSTRIAL AUTOMATION PLATFORM
+        </a>
+        <div class="nav-links">
+            <a class="nav-link" href="/">← Portal</a>
+            <a class="nav-link" href="/week1/" target="_blank">Week 1: Robotics Path Planner</a>
+            <span class="nav-active">Week 2: Quality Inspection</span>
+        </div>
+    </nav>
+
+    <div class="app-container">
+        <!-- HEADER -->
+        <header class="industrial-header">
+            <div class="header-brand">
+                <div class="brand-logo">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00F0FF" stroke-width="2">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </div>
+                <div>
+                    <h1>AUTOMATED QUALITY INSPECTION</h1>
+                    <p class="subtitle">Industrial Conveyor Computer Vision Inspection System</p>
+                </div>
+            </div>
+            <div class="header-telemetry">
+                <div class="status-badge status-active">
+                    <span class="pulse-dot"></span> VISION ENGINE ACTIVE
+                </div>
+                <div class="status-badge status-online">
+                    CAMERA: ONLINE
+                </div>
+                <div class="status-badge status-ready">
+                    PROCESSING: READY
+                </div>
+            </div>
+        </header>
+
+        <!-- KPI CARDS -->
+        <section class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">TOTAL INSPECTED</div>
+                <div class="kpi-value" id="kpi-total">0</div>
+                <div class="kpi-subtext">Cumulative component count</div>
+            </div>
+            <div class="kpi-card kpi-pass">
+                <div class="kpi-label">PASSED ITEMS</div>
+                <div class="kpi-value" id="kpi-passed">0</div>
+                <div class="kpi-subtext">Zero critical defect count</div>
+            </div>
+            <div class="kpi-card kpi-fail">
+                <div class="kpi-label">FAILED ITEMS</div>
+                <div class="kpi-value" id="kpi-failed">0</div>
+                <div class="kpi-subtext">Flagged quality deviations</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">ACCURACY RATE</div>
+                <div class="kpi-value" id="kpi-accuracy">0.0%</div>
+                <div class="kpi-subtext">Inspection precision score</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">AVERAGE LATENCY</div>
+                <div class="kpi-value" id="kpi-latency">0 ms</div>
+                <div class="kpi-subtext">Real-time pipeline speed</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">AVERAGE CONFIDENCE</div>
+                <div class="kpi-value" id="kpi-confidence">0.0%</div>
+                <div class="kpi-subtext">Mean evidence rating</div>
+            </div>
+        </section>
+
+        <!-- CONVEYOR SIMULATOR & INPUT FEED -->
+        <section class="main-workspace-grid">
+            <!-- CONVEYOR SIMULATOR CARD -->
+            <div class="glass-card conveyor-card">
+                <div class="card-header">
+                    <h2>OPTICAL CONVEYOR SIMULATOR (60 FPS)</h2>
+                    <span class="cam-tag">OPENCV CAM 01</span>
+                </div>
+                <div class="conveyor-viewport">
+                    <canvas id="conveyorCanvas" width="700" height="260"></canvas>
+                </div>
+                <div class="conveyor-telemetry-bar">
+                    <div><span>Total Inspected:</span> <strong id="sim-inspected-count">0</strong></div>
+                    <div><span>Sensor Latency:</span> <strong id="sim-sensor-latency">12.4 ms</strong></div>
+                    <div><span>Camera FPS:</span> <strong>60 FPS</strong></div>
+                    <div><span>Processing Time:</span> <strong id="sim-proc-time">28 ms</strong></div>
+                </div>
+            </div>
+
+            <!-- LIVE INSPECTION FEED & UPLOAD CARD -->
+            <div class="glass-card feed-input-card">
+                <div class="card-header">
+                    <h2>LIVE INSPECTION FEED & INPUT</h2>
+                    <button class="btn btn-warning" id="btn-generate-samples">GENERATE SAMPLES</button>
+                </div>
+                
+                <div class="input-controls-tab">
+                    <button class="tab-btn active" id="tab-btn-file">Upload Image</button>
+                    <button class="tab-btn" id="tab-btn-camera">Live Camera</button>
+                    <button class="tab-btn" id="tab-btn-sample">Sample Dataset</button>
+                </div>
+
+                <!-- FILE DROP ZONE -->
+                <div class="input-pane" id="pane-file">
+                    <div class="drop-zone" id="dropZone">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#00F0FF" stroke-width="1.5">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p class="drop-title">Drag & drop industrial component image here</p>
+                        <p class="drop-desc">Supported: JPG, PNG, BMP, WEBP</p>
+                        <input type="file" id="fileInput" accept="image/*" class="file-input-hidden">
+                        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">Browse File</button>
+                    </div>
+                </div>
+
+                <!-- LIVE CAMERA PANE -->
+                <div class="input-pane hidden" id="pane-camera">
+                    <!-- CAMERA SOURCE SELECTOR & CONTROLS BAR -->
+                    <div class="camera-source-selector" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px; flex-wrap:wrap;">
+                        <div style="display:flex; gap:6px; align-items:center;">
+                            <span style="font-size:11px; color:#94A3B8; font-family:'JetBrains Mono',monospace;">SOURCE:</span>
+                            <button class="btn btn-sm active" id="btnSourceServer" onclick="switchCameraSource('server')" style="padding:4px 10px; font-size:11px;">Server OpenCV</button>
+                            <button class="btn btn-sm btn-secondary" id="btnSourceWebRTC" onclick="switchCameraSource('webrtc')" style="padding:4px 10px; font-size:11px;">Browser Webcam (WebRTC)</button>
+                        </div>
+                        <button class="btn btn-sm btn-secondary" onclick="scanServerCamera()" style="padding:4px 10px; font-size:11px; display:flex; align-items:center; gap:4px;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.13 15.57a10 10 0 1 0 0-7.14"/></svg>
+                            Re-Scan Camera
+                        </button>
+                    </div>
+
+                    <!-- CAMERA CONTROLS BAR -->
+                    <div class="camera-controls-bar">
+                        <div class="camera-status-group">
+                            <span class="cam-status-dot" id="camStatusDot"></span>
+                            <span class="cam-status-label" id="camStatusLabel">STREAM ACTIVE</span>
+                        </div>
+                        <div class="camera-btn-group">
+                            <button class="btn btn-cam-stop" id="btnCameraStop" onclick="stopCamera()">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                                STOP
+                            </button>
+                            <button class="btn btn-cam-start hidden" id="btnCameraStart" onclick="startCamera()">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                START
+                            </button>
+                            <button class="btn btn-cam-snapshot" id="btnSnapshot" onclick="captureSnapshot()">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M20.94 11A8.994 8.994 0 1 1 3.06 13"/><path d="M20 4v4h-4"/></svg>
+                                CAPTURE &amp; INSPECT
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- VIDEO FEED CONTAINER -->
+                    <div class="video-feed-container" style="position:relative;">
+                        <img id="liveFeedImg" src="/video_feed" alt="Live Stream" class="live-stream-img">
+                        <video id="webcamVideo" class="live-stream-img hidden" autoplay playsinline muted style="width:100%; height:auto; object-fit:cover;"></video>
+                        <div class="stream-paused-overlay hidden" id="streamPausedOverlay">
+                            <svg width="44" height="44" viewBox="0 0 24 24" fill="rgba(255,255,255,0.25)"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                            <div class="paused-text">CAMERA STREAM PAUSED</div>
+                            <div class="paused-subtext">Click START to resume live feed</div>
+                        </div>
+                        <div class="stream-overlay" id="streamOverlayLabel">OPENCV OPTICAL STREAM ACTIVE</div>
+                    </div>
+                </div>
+
+                <!-- SAMPLE DATASET PANE -->
+                <div class="input-pane hidden" id="pane-sample">
+                    <div class="sample-grid">
+                        <div class="sample-badge pass" onclick="loadSample('sample_dataset/pass/good_gear.png')">Good Gear</div>
+                        <div class="sample-badge pass" onclick="loadSample('sample_dataset/pass/good_bolt.png')">Good Bolt</div>
+                        <div class="sample-badge pass" onclick="loadSample('sample_dataset/pass/good_surface.png')">Good Surface</div>
+                        <div class="sample-badge pass" onclick="loadSample('sample_dataset/pass/good_pcb.png')">Good PCB</div>
+                        
+                        <div class="sample-badge fail" onclick="loadSample('sample_dataset/fail/missing_gear_tooth.png')">Missing Gear Tooth</div>
+                        <div class="sample-badge fail" onclick="loadSample('sample_dataset/fail/broken_gear_tooth.png')">Broken Gear Tooth</div>
+                        <div class="sample-badge fail" onclick="loadSample('sample_dataset/fail/crack.png')">Crack Detection</div>
+                        <div class="sample-badge fail" onclick="loadSample('sample_dataset/fail/missing_screw.png')">Missing Screw</div>
+                        <div class="sample-badge fail" onclick="loadSample('sample_dataset/fail/surface_scratch.png')">Surface Scratch</div>
+                        <div class="sample-badge fail" onclick="loadSample('sample_dataset/fail/wrong_shape.png')">Wrong Shape</div>
+                        <div class="sample-badge fail" onclick="loadSample('sample_dataset/fail/incorrect_dimensions.png')">Incorrect Dims</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PASS / FAIL RESULT & 15-STAGE PIPELINE VIEWER -->
+        <section class="pipeline-section">
+            <div class="glass-card stage-viewer-card">
+                <div class="card-header">
+                    <h2>15-STAGE OPENCV COMPUTER VISION PIPELINE</h2>
+                    <span class="stage-count-badge">15/15 STAGES ACTIVE</span>
+                </div>
+
+                <!-- STAGE TABS BAR -->
+                <div class="stage-tabs-scroll" id="stageTabsBar">
+                    <!-- Dynamic 1-15 Stage Buttons -->
+                </div>
+
+                <!-- STAGE DISPLAY CONTENT -->
+                <div class="stage-content-body">
+                    <div class="stage-preview-column">
+                        <div class="preview-box" id="previewBox">
+                            <img id="stagePreviewImg" alt="Stage Preview" class="stage-img">
+                        </div>
+                    </div>
+                    <div class="stage-info-column">
+                        <div class="stage-info-header">
+                            <span class="stage-num-tag" id="stageNumTag">STAGE 1</span>
+                            <h3 id="stageTitle">Read Image</h3>
+                            <span class="badge" id="stageStatusBadge">PASS</span>
+                        </div>
+                        <div class="stage-metric-row">
+                            <div><span>Execution Time:</span> <strong id="stageTime">0 ms</strong></div>
+                            <div><span>Image Matrix:</span> <strong id="stageMatrix">400 x 400</strong></div>
+                        </div>
+                        <div class="stage-explanation-box">
+                            <h4>Technical Pipeline Explanation</h4>
+                            <p id="stageExplanation">Select a processing stage to inspect output.</p>
+                        </div>
+                    </div>
+
+                    <!-- PASS / FAIL FINAL CLASSIFICATION SUMMARY -->
+                    <div class="final-result-column" id="finalResultBox">
+                        <div class="result-banner pass" id="resultBanner">
+                            <div class="result-status" id="resultStatusText">PASS</div>
+                            <div class="result-defect" id="resultDefectText">No Critical Defect</div>
+                        </div>
+                        <div class="result-metrics-list">
+                            <div><span>Confidence:</span> <strong id="resConfidence">98.6%</strong></div>
+                            <div><span>Product Type:</span> <strong id="resProduct">Gear</strong></div>
+                            <div><span>Processing Time:</span> <strong id="resLatency">31.8 ms</strong></div>
+                        </div>
+
+                        <!-- CALIBRATED MEASUREMENTS TABLE -->
+                        <div class="measurements-table-box">
+                            <h4>Calibrated Measurements</h4>
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Metric</th>
+                                        <th>Measured</th>
+                                        <th>Tolerance</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dimTableBody">
+                                    <tr><td>Width</td><td>0.0 mm</td><td>±2.0 mm</td><td><span class="badge pass">PASS</span></td></tr>
+                                    <tr><td>Height</td><td>0.0 mm</td><td>±2.0 mm</td><td><span class="badge pass">PASS</span></td></tr>
+                                    <tr><td>Area</td><td>0.0 mm²</td><td>±50 mm²</td><td><span class="badge pass">PASS</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- EXPORT REPORT ACTIONS -->
+                        <div class="report-export-row">
+                            <button class="btn btn-secondary" onclick="exportReport('pdf')">PDF Report</button>
+                            <button class="btn btn-secondary" onclick="exportReport('csv')">CSV</button>
+                            <button class="btn btn-secondary" onclick="exportReport('excel')">Excel</button>
+                            <button class="btn btn-secondary" onclick="exportReport('json')">JSON</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ANALYTICS & INSPECTION HISTORY -->
+        <section class="analytics-history-grid">
+            <!-- ANALYTICS CHARTS CARD -->
+            <div class="glass-card analytics-card">
+                <div class="card-header">
+                    <h2>QUALITY INSPECTION ANALYTICS</h2>
+                </div>
+                <div class="charts-grid">
+                    <div class="chart-box">
+                        <h3>PASS vs FAIL Distribution</h3>
+                        <canvas id="passFailChart"></canvas>
+                    </div>
+                    <div class="chart-box">
+                        <h3>Defect Category Breakdown</h3>
+                        <canvas id="defectChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INTERACTIVE JSON CODE VIEWER -->
+            <div class="glass-card json-viewer-card">
+                <div class="card-header">
+                    <h2>INSPECTION JSON TELEMETRY VIEWER</h2>
+                    <div class="json-actions">
+                        <button class="btn btn-sm" onclick="copyJson()">Copy</button>
+                        <button class="btn btn-sm" onclick="downloadJsonFile()">Download</button>
+                    </div>
+                </div>
+                <div class="json-content-box">
+                    <pre><code id="jsonCodeView">{ "status": "Ready for inspection stream..." }</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- INSPECTION HISTORY TABLE -->
+        <section class="history-section">
+            <div class="glass-card history-card">
+                <div class="card-header">
+                    <h2>INSPECTION RECORDS & TELEMETRY LOGS</h2>
+                    <div class="filter-controls">
+                        <input type="text" id="searchInput" placeholder="Search by ID or defect..." class="search-input">
+                        <select id="filterSelect" class="filter-select">
+                            <option value="">All Results</option>
+                            <option value="PASS">PASS Only</option>
+                            <option value="FAIL">FAIL Only</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-scroll-container">
+                    <table class="data-table history-table">
+                        <thead>
+                            <tr>
+                                <th>Inspection ID</th>
+                                <th>Timestamp</th>
+                                <th>Filename</th>
+                                <th>Product</th>
+                                <th>Result</th>
+                                <th>Defect</th>
+                                <th>Confidence</th>
+                                <th>Latency</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <!-- Dynamic History Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/js/charts.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

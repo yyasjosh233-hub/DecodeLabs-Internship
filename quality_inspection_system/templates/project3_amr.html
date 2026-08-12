@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 3: AMR Navigation | Industrial Robotics Platform</title>
+    <meta name="description" content="Autonomous Mobile Robot Navigation System with ROS 2, EKF Sensor Fusion, Occupancy Grid Mapping, Custom A* Planner, and Dynamic Obstacle Avoidance.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --bg-dark:    #070B14;
+            --card-bg:    rgba(13, 20, 40, 0.92);
+            --border-glow: rgba(56, 189, 248, 0.25);
+            --cyan:       #00F0FF;
+            --blue:       #0284C7;
+            --orange:     #F97316;
+            --red:        #EF4444;
+            --green:      #10B981;
+            --yellow:     #EAB308;
+            --purple:     #A855F7;
+            --text:       #F8FAFC;
+            --muted:      #94A3B8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            background-color: var(--bg-dark);
+            font-family: 'Outfit', sans-serif;
+            color: var(--text);
+            padding: 16px;
+            overflow-x: hidden;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 14px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .logo-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--cyan);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badges {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .badge-sim { background: rgba(0,240,255,0.12); border: 1px solid var(--cyan); color: var(--cyan); }
+        .badge-state { background: rgba(249,115,22,0.15); border: 1px solid var(--orange); color: var(--orange); }
+        .badge-estop { background: rgba(239,68,68,0.2); border: 1px solid var(--red); color: var(--red); }
+
+        /* Main Layout Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 14px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card-header {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--cyan);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding-bottom: 8px;
+        }
+
+        /* 3D & 2D Viewports side-by-side */
+        .viewports-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 800px) {
+            .viewports-row { grid-template-columns: 1fr; }
+        }
+
+        .viewport-box {
+            width: 100%;
+            height: 380px;
+            background: #030712;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #threeCanvas {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #gridCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .telemetry-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        @media (max-width: 900px) {
+            .telemetry-row { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .stat-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
+        .stat-value { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 700; }
+
+        /* Diagnostics List */
+        .diag-list {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .diag-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 8px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 4px;
+        }
+
+        /* Buttons & Control Panels */
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-cyan { background: rgba(0,240,255,0.15); border-color: var(--cyan); color: var(--cyan); }
+        .btn-cyan:hover { background: var(--cyan); color: #000; }
+
+        .btn-green { background: rgba(16,185,129,0.15); border-color: var(--green); color: var(--green); }
+        .btn-green:hover { background: var(--green); color: #000; }
+
+        .btn-orange { background: rgba(249,115,22,0.15); border-color: var(--orange); color: var(--orange); }
+        .btn-orange:hover { background: var(--orange); color: #000; }
+
+        .btn-red { background: rgba(239,68,68,0.2); border-color: var(--red); color: var(--red); }
+        .btn-red:hover { background: var(--red); color: #fff; }
+
+        .btn-purple { background: rgba(168,85,247,0.15); border-color: var(--purple); color: var(--purple); }
+        .btn-purple:hover { background: var(--purple); color: #fff; }
+
+        /* Console log window */
+        .console-box {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            background: #02040a;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 10px;
+            height: 180px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .log-INFO { color: var(--cyan); }
+        .log-WARNING { color: var(--orange); }
+        .log-DANGER { color: var(--red); }
+        .log-SUCCESS { color: var(--green); }
+
+        /* Teleop pad */
+        .teleop-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            max-width: 180px;
+            margin: 0 auto;
+        }
+
+        .tf-tree-view {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 6px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo-title">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+            </svg>
+            PROJECT 3: AUTONOMOUS MOBILE ROBOT (AMR) NAVIGATION
+        </div>
+        <div class="badges">
+            <span class="badge badge-sim" id="rosStatus">ROS 2: SIMULATION MODE</span>
+            <span class="badge badge-state" id="navStateBadge">STATE: IDLE</span>
+        </div>
+    </header>
+
+    <!-- MAIN DASHBOARD LAYOUT -->
+    <div class="dashboard-grid">
+
+        <!-- LEFT COLUMN: VIEWPORTS & TELEMETRY -->
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            
+            <!-- VIEWPORTS -->
+            <div class="card">
+                <div class="card-header">
+                    <span>1. AMR 3D SIMULATION &amp; 2D OCCUPANCY GRID MAP</span>
+                    <span style="color: var(--muted); font-size: 0.7rem;">Real-time 3D Viewport &amp; 2D Raycasting</span>
+                </div>
+                <div class="viewports-row">
+                    <!-- 3D Three.js Viewport -->
+                    <div class="viewport-box">
+                        <div style="position: absolute; top: 8px; left: 8px; font-family: 'JetBrains Mono'; font-size: 0.7rem; color: var(--cyan); z-index: 10; background: rgba(0,0,0,0.7); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(0,240,255,0.3);">
+                            3D Gazebo Simulation Engine
+                        </div>
+                        <div id="threeCanvas"></div>
+                    </div>
+
+                    <!-- 2D Occupancy Grid Canvas -->
+                    <div class="viewport-box">
+                        <div style="position: absolute; top: 8px; left: 8px; font-family: 'JetBrains Mono'; font-size: 0.7rem; color: var(--orange); z-index: 10; background: rgba(0,0,0,0.7); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(249,115,22,0.3);">
+                            2D Occupancy Grid &amp; Ray Casting (10m x 10m)
+                        </div>
+                        <canvas id="gridCanvas" width="380" height="380"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TELEMETRY STATS -->
+            <div class="telemetry-row">
+                <div class="stat-card">
+                    <div class="stat-label">Pose (X, Y, Yaw)</div>
+                    <div class="stat-value" id="statPose" style="color: var(--cyan);">1.00, 1.00, 0.0°</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Velocity (Linear / Angular)</div>
+                    <div class="stat-value" id="statVel" style="color: var(--green);">0.00 / 0.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">LiDAR Min Range</div>
+                    <div class="stat-value" id="statLaser" style="color: var(--orange);">10.00 m</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Odom Drift Error</div>
+                    <div class="stat-value" id="statDrift" style="color: var(--purple);">0.00 m</div>
+                </div>
+            </div>
+
+            <!-- DIAGNOSTICS PANELS ROW -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                
+                <!-- CUSTOM A* DIAGNOSTICS -->
+                <div class="card">
+                    <div class="card-header">
+                        <span>5. CUSTOM A* SEARCH DIAGNOSTICS</span>
+                        <span style="color: var(--orange);">Manhattan Heuristic</span>
+                    </div>
+                    <div class="diag-list">
+                        <div class="diag-item"><span>Algorithm</span><span style="color:var(--cyan);" id="astAlgo">Custom A*</span></div>
+                        <div class="diag-item"><span>Heuristic h(n)</span><span id="astHeuristic">|x1-x2| + |y1-y2|</span></div>
+                        <div class="diag-item"><span>Search Status</span><span id="astStatus" style="color:var(--green);">IDLE</span></div>
+                        <div class="diag-item"><span>Nodes Expanded</span><span id="astNodes">0</span></div>
+                        <div class="diag-item"><span>Planning Time</span><span id="astTime">0.0 ms</span></div>
+                        <div class="diag-item"><span>Path Length / Cost</span><span id="astCost">0.0m / 0.0</span></div>
+                        <div class="diag-item"><span>Waypoints Count</span><span id="astWaypoints">0</span></div>
+                        <div class="diag-item"><span>OPEN / CLOSED Nodes</span><span id="astLists">0 / 0</span></div>
+                    </div>
+                </div>
+
+                <!-- LOCALIZATION & EKF COMPARISON -->
+                <div class="card">
+                    <div class="card-header">
+                        <span>4. LOCALIZATION (RAW VS EKF)</span>
+                        <span style="color: var(--purple);">Sensor Fusion</span>
+                    </div>
+                    <div class="diag-list">
+                        <div class="diag-item"><span>Ground Truth Pose</span><span id="gtPose" style="color:var(--cyan);">1.00, 1.00</span></div>
+                        <div class="diag-item"><span>Raw Odometry (Drifting)</span><span id="rawOdom" style="color:var(--yellow);">1.00, 1.00</span></div>
+                        <div class="diag-item"><span>EKF Filtered Pose</span><span id="ekfPose" style="color:var(--green);">1.00, 1.00</span></div>
+                        <div class="diag-item"><span>Covariance Trace tr(P)</span><span id="ekfCov">0.100</span></div>
+                        <div class="diag-item"><span>Distance to Goal</span><span id="distGoal">8.60 m</span></div>
+                        <div class="diag-item"><span>Reflex Deceleration</span><span id="reflexVel" style="color:var(--orange);">0.80 m/s</span></div>
+                        <div class="diag-item"><span>Safety Override</span><span id="safetyStatus" style="color:var(--green);">CLEAR</span></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: CONTROLS, TELEOP, LOGS & EXPORT -->
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            
+            <!-- CONTROLS CARD -->
+            <div class="card">
+                <div class="card-header"><span>AMR NAVIGATION CONTROLS</span></div>
+                <div class="btn-group">
+                    <button class="btn btn-cyan" onclick="setStartPose()">Set Start (1,1)</button>
+                    <button class="btn btn-purple" onclick="setGoalPose()">Set Goal (8,7)</button>
+                    <button class="btn btn-orange" onclick="triggerPlan()">Plan A* Path</button>
+                    <button class="btn btn-green" onclick="controlNav('start')">Start Nav</button>
+                    <button class="btn btn-cyan" onclick="controlNav('pause')">Pause</button>
+                    <button class="btn btn-purple" onclick="controlNav('resume')">Resume</button>
+                    <button class="btn btn-red" onclick="triggerEStop()">E-STOP</button>
+                    <button class="btn btn-cyan" onclick="resetSystem()">Reset AMR</button>
+                </div>
+            </div>
+
+            <!-- DYNAMIC OBSTACLE CONTROL -->
+            <div class="card">
+                <div class="card-header"><span>DYNAMIC OBSTACLES</span></div>
+                <div class="btn-group">
+                    <button class="btn btn-orange" onclick="addObstacle(4.0, 4.0)">Spawn Box (4,4)</button>
+                    <button class="btn btn-orange" onclick="addObstacle(6.0, 7.0)">Spawn Pedestrian (6,7)</button>
+                    <button class="btn btn-purple" onclick="clearObstacles()">Clear Obstacles</button>
+                </div>
+            </div>
+
+            <!-- MANUAL TELEOP -->
+            <div class="card">
+                <div class="card-header"><span>ROBOT TELEOP (KEYBOARD)</span></div>
+                <div class="teleop-grid">
+                    <div></div>
+                    <button class="btn btn-cyan" onclick="sendTeleop('forward')">W ▲</button>
+                    <div></div>
+                    <button class="btn btn-cyan" onclick="sendTeleop('left')">A ◄</button>
+                    <button class="btn btn-red" onclick="sendTeleop('stop')">STOP</button>
+                    <button class="btn btn-cyan" onclick="sendTeleop('right')">D ►</button>
+                    <div></div>
+                    <button class="btn btn-cyan" onclick="sendTeleop('backward')">S ▼</button>
+                    <div></div>
+                </div>
+            </div>
+
+            <!-- TF2 TRANSFORM TREE -->
+            <div class="card">
+                <div class="card-header"><span>TF2 TRANSFORM TREE</span></div>
+                <div class="tf-tree-view">
+                    map<br>
+                    &nbsp;└── odom (EKF Filtered)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;└── base_link<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── laser<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── imu_link
+                </div>
+            </div>
+
+            <!-- DATA EXPORT -->
+            <div class="card">
+                <div class="card-header"><span>DATA EXPORT</span></div>
+                <div class="btn-group">
+                    <a href="/api/amr/export/json" class="btn btn-green" target="_blank">Export JSON</a>
+                    <a href="/api/amr/export/csv" class="btn btn-purple" target="_blank">Export CSV</a>
+                </div>
+            </div>
+
+            <!-- LIVE ROBOTICS CONSOLE LOGS -->
+            <div class="card">
+                <div class="card-header"><span>LIVE ROBOTICS CONSOLE</span></div>
+                <div class="console-box" id="consoleLogs"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT ENGINE & VISUALIZERS -->
+    <script>
+        // ---------------------------------------------------------
+        // THREE.JS 3D VIEWPORT SETUP
+        // ---------------------------------------------------------
+        const container = document.getElementById('threeCanvas');
+        const width = container.clientWidth || 380;
+        const height = container.clientHeight || 380;
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x030712);
+
+        const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+        camera.position.set(5, -6, 13);
+        camera.up.set(0, 0, 1);
+        camera.lookAt(5, 5, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(width, height);
+        container.appendChild(renderer.domElement);
+
+        // Lights & Floor Grid
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+        scene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0x00f0ff, 1.2);
+        dirLight.position.set(5, -2, 14);
+        scene.add(dirLight);
+
+        // Dark Floor Plane with Cyan Grid
+        const floorGeo = new THREE.PlaneGeometry(10, 10);
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0x070b19, roughness: 0.8 });
+        const floorMesh = new THREE.Mesh(floorGeo, floorMat);
+        floorMesh.position.set(5, 5, 0);
+        scene.add(floorMesh);
+
+        const gridHelper = new THREE.GridHelper(10, 10, 0x00f0ff, 0x1e293b);
+        gridHelper.rotation.x = Math.PI / 2;
+        gridHelper.position.set(5, 5, 0.01);
+        scene.add(gridHelper);
+
+        // AMR Robot Group
+        const robotGroup = new THREE.Group();
+
+        // Chassis (Bright Cyan Glowing Cylinder)
+        const chassisGeo = new THREE.CylinderGeometry(0.35, 0.35, 0.20, 32);
+        const chassisMat = new THREE.MeshStandardMaterial({ color: 0x00f0ff, emissive: 0x004455, metalness: 0.8, roughness: 0.2 });
+        const chassis = new THREE.Mesh(chassisGeo, chassisMat);
+        chassis.rotation.x = Math.PI / 2;
+        robotGroup.add(chassis);
+
+        // Heading Direction Pointer (Yellow Cone)
+        const dirGeo = new THREE.ConeGeometry(0.12, 0.35, 16);
+        const dirMat = new THREE.MeshStandardMaterial({ color: 0xeab308, emissive: 0x664400 });
+        const dirCone = new THREE.Mesh(dirGeo, dirMat);
+        dirCone.position.set(0.38, 0, 0.05);
+        dirCone.rotation.z = -Math.PI / 2;
+        robotGroup.add(dirCone);
+
+        // Left Wheel
+        const wheelGeo = new THREE.CylinderGeometry(0.10, 0.10, 0.06, 16);
+        const wheelMat = new THREE.MeshStandardMaterial({ color: 0x111827 });
+        const lWheel = new THREE.Mesh(wheelGeo, wheelMat);
+        lWheel.position.set(0, 0.32, 0);
+        lWheel.rotation.z = Math.PI / 2;
+        robotGroup.add(lWheel);
+
+        // Right Wheel
+        const rWheel = new THREE.Mesh(wheelGeo, wheelMat);
+        rWheel.position.set(0, -0.32, 0);
+        rWheel.rotation.z = Math.PI / 2;
+        robotGroup.add(rWheel);
+
+        // Laser Tower
+        const laserGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.10, 16);
+        const laserMat = new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0x552200 });
+        const laserMesh = new THREE.Mesh(laserGeo, laserMat);
+        laserMesh.position.set(0.12, 0, 0.15);
+        laserMesh.rotation.x = Math.PI / 2;
+        robotGroup.add(laserMesh);
+
+        robotGroup.position.set(1.0, 1.0, 0.10);
+        scene.add(robotGroup);
+
+        // Start (Green) & Goal (Red) Markers in 3D
+        const startMarkerGeo = new THREE.CylinderGeometry(0.25, 0.25, 0.6, 16);
+        const startMarkerMat = new THREE.MeshStandardMaterial({ color: 0x10b981, emissive: 0x054422, transparent: true, opacity: 0.85 });
+        const startMesh = new THREE.Mesh(startMarkerGeo, startMarkerMat);
+        startMesh.rotation.x = Math.PI / 2;
+        startMesh.position.set(1, 1, 0.3);
+        scene.add(startMesh);
+
+        const goalMarkerGeo = new THREE.CylinderGeometry(0.25, 0.25, 0.6, 16);
+        const goalMarkerMat = new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0x551111, transparent: true, opacity: 0.85 });
+        const goalMesh = new THREE.Mesh(goalMarkerGeo, goalMarkerMat);
+        goalMesh.rotation.x = Math.PI / 2;
+        goalMesh.position.set(8, 7, 0.3);
+        scene.add(goalMesh);
+
+        // 3D Static Walls Group
+        const wallsGroup = new THREE.Group();
+        scene.add(wallsGroup);
+        let wallsBuilt = false;
+
+        function build3DStaticWalls(walls) {
+            if (wallsBuilt || !walls) return;
+            walls.forEach(([p1, p2]) => {
+                const [x1, y1] = p1;
+                const [x2, y2] = p2;
+                const len = Math.hypot(x2 - x1, y2 - y1);
+                const angle = Math.atan2(y2 - y1, x2 - x1);
+
+                const wallGeo = new THREE.BoxGeometry(len, 0.22, 1.5);
+                const wallMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, emissive: 0x003355, metalness: 0.5, roughness: 0.3 });
+                const wallMesh = new THREE.Mesh(wallGeo, wallMat);
+
+                wallMesh.position.set((x1 + x2) / 2.0, (y1 + y2) / 2.0, 0.75);
+                wallMesh.rotation.z = angle;
+                wallsGroup.add(wallMesh);
+            });
+            wallsBuilt = true;
+        }
+
+        // 3D Path Line
+        let pathLineMesh = null;
+        function update3DPath(path) {
+            if (pathLineMesh) scene.remove(pathLineMesh);
+            if (!path || path.length < 2) return;
+
+            const points = path.map(([px, py]) => new THREE.Vector3(px, py, 0.18));
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineBasicMaterial({ color: 0xf97316, linewidth: 4 });
+            pathLineMesh = new THREE.Line(geometry, material);
+            scene.add(pathLineMesh);
+        }
+
+        // 3D Dynamic Obstacle Meshes
+        const dynamicObsGroup = new THREE.Group();
+        scene.add(dynamicObsGroup);
+
+        function update3DDynamicObstacles(obstacles) {
+            while (dynamicObsGroup.children.length > 0) {
+                dynamicObsGroup.remove(dynamicObsGroup.children[0]);
+            }
+            if (!obstacles) return;
+
+            obstacles.forEach(obs => {
+                const obsGeo = new THREE.CylinderGeometry(obs.radius, obs.radius, 1.2, 16);
+                const obsMat = new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0x661111, metalness: 0.6, roughness: 0.4 });
+                const obsMesh = new THREE.Mesh(obsGeo, obsMat);
+                obsMesh.rotation.x = Math.PI / 2;
+                obsMesh.position.set(obs.x, obs.y, 0.6);
+                dynamicObsGroup.add(obsMesh);
+            });
+        }
+
+        // Window Resize Handler
+        window.addEventListener('resize', () => {
+            const w = container.clientWidth || 380;
+            const h = container.clientHeight || 380;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+        });
+
+        // ---------------------------------------------------------
+        // 2D CANVAS OCCUPANCY GRID RENDERER
+        // ---------------------------------------------------------
+        const canvas2d = document.getElementById('gridCanvas');
+        const ctx2d = canvas2d.getContext('2d');
+
+        function draw2DGrid(state) {
+            if (!canvas2d || !ctx2d || !state) return;
+
+            // Ensure pixel crispness matching client dimensions
+            const w = canvas2d.clientWidth || 380;
+            const h = canvas2d.clientHeight || 380;
+            if (canvas2d.width !== w || canvas2d.height !== h) {
+                canvas2d.width = w;
+                canvas2d.height = h;
+            }
+
+            ctx2d.fillStyle = '#030712';
+            ctx2d.fillRect(0, 0, w, h);
+
+            const scaleX = w / 10.0;
+            const scaleY = h / 10.0;
+
+            // Draw Grid Lines (1m intervals)
+            ctx2d.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+            ctx2d.lineWidth = 1;
+            for (let i = 0; i <= 10; i++) {
+                ctx2d.beginPath(); ctx2d.moveTo(i * scaleX, 0); ctx2d.lineTo(i * scaleX, h); ctx2d.stroke();
+                ctx2d.beginPath(); ctx2d.moveTo(0, i * scaleY); ctx2d.lineTo(w, i * scaleY); ctx2d.stroke();
+            }
+
+            // Draw Static Maze Walls (Blue/Cyan Lines)
+            if (state.static_walls && Array.isArray(state.static_walls)) {
+                ctx2d.strokeStyle = '#0284C7';
+                ctx2d.lineWidth = 5;
+                state.static_walls.forEach(([p1, p2]) => {
+                    ctx2d.beginPath();
+                    ctx2d.moveTo(p1[0] * scaleX, (10 - p1[1]) * scaleY);
+                    ctx2d.lineTo(p2[0] * scaleX, (10 - p2[1]) * scaleY);
+                    ctx2d.stroke();
+                });
+            }
+
+            // Draw Dynamic Obstacles (Red Circles)
+            if (state.dynamic_obstacles && Array.isArray(state.dynamic_obstacles)) {
+                ctx2d.fillStyle = '#EF4444';
+                state.dynamic_obstacles.forEach(obs => {
+                    ctx2d.beginPath();
+                    ctx2d.arc(obs.x * scaleX, (10 - obs.y) * scaleY, obs.radius * scaleX, 0, 2*Math.PI);
+                    ctx2d.fill();
+                });
+            }
+
+            // Draw Start (Green) & Goal (Red)
+            const sx = state.start_pose ? state.start_pose[0] : 1.0;
+            const sy = state.start_pose ? state.start_pose[1] : 1.0;
+            const gx = state.goal_pose ? state.goal_pose[0] : 8.0;
+            const gy = state.goal_pose ? state.goal_pose[1] : 7.0;
+
+            ctx2d.fillStyle = '#10B981';
+            ctx2d.beginPath(); ctx2d.arc(sx * scaleX, (10 - sy) * scaleY, 8, 0, 2*Math.PI); ctx2d.fill();
+            ctx2d.fillStyle = '#FFF'; ctx2d.font = '700 11px JetBrains Mono'; ctx2d.fillText('S', sx * scaleX - 4, (10 - sy) * scaleY + 4);
+
+            ctx2d.fillStyle = '#EF4444';
+            ctx2d.beginPath(); ctx2d.arc(gx * scaleX, (10 - gy) * scaleY, 8, 0, 2*Math.PI); ctx2d.fill();
+            ctx2d.fillStyle = '#FFF'; ctx2d.font = '700 11px JetBrains Mono'; ctx2d.fillText('G', gx * scaleX - 4, (10 - gy) * scaleY + 4);
+
+            // Draw Global Path (Orange)
+            if (state.global_path && Array.isArray(state.global_path) && state.global_path.length > 1) {
+                ctx2d.strokeStyle = '#F97316';
+                ctx2d.lineWidth = 3;
+                ctx2d.beginPath();
+                state.global_path.forEach(([px, py], idx) => {
+                    const cx = px * scaleX;
+                    const cy = (10 - py) * scaleY;
+                    if (idx === 0) ctx2d.moveTo(cx, cy);
+                    else ctx2d.lineTo(cx, cy);
+                });
+                ctx2d.stroke();
+            }
+
+            // Draw Robot Trajectory (Purple)
+            if (state.robot_trajectory && Array.isArray(state.robot_trajectory) && state.robot_trajectory.length > 1) {
+                ctx2d.strokeStyle = '#A855F7';
+                ctx2d.lineWidth = 1.5;
+                ctx2d.beginPath();
+                state.robot_trajectory.forEach(([px, py], idx) => {
+                    const cx = px * scaleX;
+                    const cy = (10 - py) * scaleY;
+                    if (idx === 0) ctx2d.moveTo(cx, cy);
+                    else ctx2d.lineTo(cx, cy);
+                });
+                ctx2d.stroke();
+            }
+
+            // Draw LiDAR Rays (Cyan semi-transparent lines)
+            const rx = state.ekf_pose ? state.ekf_pose.x : 1.0;
+            const ry = state.ekf_pose ? state.ekf_pose.y : 1.0;
+            const ryaw = state.ekf_pose ? state.ekf_pose.yaw : 0.0;
+
+            if (state.scan_ranges && Array.isArray(state.scan_ranges) && state.scan_ranges.length > 0) {
+                ctx2d.strokeStyle = 'rgba(0, 240, 255, 0.35)';
+                ctx2d.lineWidth = 1.0;
+                const angleStep = (2 * Math.PI) / state.scan_ranges.length;
+                state.scan_ranges.forEach((r, idx) => {
+                    if (r < 10.0) {
+                        const angle = ryaw + (-Math.PI + idx * angleStep);
+                        const hx = rx + r * Math.cos(angle);
+                        const hy = ry + r * Math.sin(angle);
+                        ctx2d.beginPath();
+                        ctx2d.moveTo(rx * scaleX, (10 - ry) * scaleY);
+                        ctx2d.lineTo(hx * scaleX, (10 - hy) * scaleY);
+                        ctx2d.stroke();
+                    }
+                });
+            }
+
+            // Draw Robot Footprint (Cyan circle + Heading direction arrow)
+            ctx2d.fillStyle = '#00F0FF';
+            ctx2d.beginPath(); ctx2d.arc(rx * scaleX, (10 - ry) * scaleY, 7, 0, 2*Math.PI); ctx2d.fill();
+
+            ctx2d.strokeStyle = '#00F0FF';
+            ctx2d.lineWidth = 3;
+            ctx2d.beginPath();
+            ctx2d.moveTo(rx * scaleX, (10 - ry) * scaleY);
+            ctx2d.lineTo((rx + 0.6 * Math.cos(ryaw)) * scaleX, (10 - (ry + 0.6 * Math.sin(ryaw))) * scaleY);
+            ctx2d.stroke();
+        }
+
+        // ---------------------------------------------------------
+        // TELEMETRY POLLING LOOP
+        // ---------------------------------------------------------
+        async function updateTelemetry() {
+            try {
+                const res = await fetch('/api/amr/state');
+                if (!res.ok) return;
+                const data = await res.json();
+
+                // Build 3D Static Walls once data arrives
+                if (data.static_walls) {
+                    build3DStaticWalls(data.static_walls);
+                }
+
+                // Update Start & Goal 3D markers
+                if (data.start_pose) startMesh.position.set(data.start_pose[0], data.start_pose[1], 0.3);
+                if (data.goal_pose) goalMesh.position.set(data.goal_pose[0], data.goal_pose[1], 0.3);
+
+                // Update 3D Path & Dynamic Obstacles
+                update3DPath(data.global_path);
+                update3DDynamicObstacles(data.dynamic_obstacles);
+
+                // Update Badges & Status
+                document.getElementById('navStateBadge').innerText = `STATE: ${data.nav_state}`;
+                if (data.is_e_stopped) {
+                    document.getElementById('navStateBadge').className = 'badge badge-estop';
+                } else {
+                    document.getElementById('navStateBadge').className = 'badge badge-state';
+                }
+
+                if (data.ekf_pose) {
+                    document.getElementById('statPose').innerText = `${data.ekf_pose.x.toFixed(2)}, ${data.ekf_pose.y.toFixed(2)}, ${(data.ekf_pose.yaw * 180 / Math.PI).toFixed(1)}°`;
+                    document.getElementById('ekfPose').innerText = `${data.ekf_pose.x.toFixed(2)}, ${data.ekf_pose.y.toFixed(2)}`;
+                    document.getElementById('ekfCov').innerText = Number(data.ekf_pose.covariance_tr).toFixed(4);
+
+                    // Update 3D Robot Pose
+                    robotGroup.position.set(data.ekf_pose.x, data.ekf_pose.y, 0.10);
+                    robotGroup.rotation.z = data.ekf_pose.yaw;
+                }
+
+                document.getElementById('statVel').innerText = `${Number(data.linear_velocity).toFixed(2)} / ${Number(data.angular_velocity).toFixed(2)}`;
+                document.getElementById('statLaser').innerText = `${Number(data.lidar_min_range_m).toFixed(2)} m`;
+                document.getElementById('statDrift').innerText = `${Number(data.odometry_drift_m).toFixed(2)} m`;
+
+                // Custom A* Diagnostics
+                if (data.a_star_diagnostics) {
+                    const ast = data.a_star_diagnostics;
+                    document.getElementById('astStatus').innerText = ast.status || 'IDLE';
+                    document.getElementById('astNodes').innerText = ast.nodes_expanded || 0;
+                    document.getElementById('astTime').innerText = `${ast.planning_time_ms || 0} ms`;
+                    document.getElementById('astCost').innerText = `${ast.path_length_m || 0}m / ${ast.path_cost || 0}`;
+                    document.getElementById('astWaypoints').innerText = ast.waypoints_count || 0;
+                    document.getElementById('astLists').innerText = `${ast.open_nodes || 0} / ${ast.closed_nodes || 0}`;
+                }
+
+                // Localization & EKF
+                if (data.ground_truth) {
+                    document.getElementById('gtPose').innerText = `${data.ground_truth.x.toFixed(2)}, ${data.ground_truth.y.toFixed(2)}`;
+                }
+                if (data.raw_odometry) {
+                    document.getElementById('rawOdom').innerText = `${data.raw_odometry.x.toFixed(2)}, ${data.raw_odometry.y.toFixed(2)}`;
+                }
+                document.getElementById('distGoal').innerText = `${Number(data.goal_distance_m).toFixed(2)} m`;
+
+                // Update 2D Canvas
+                draw2DGrid(data);
+
+                // Update Console Logs
+                if (data.logs && Array.isArray(data.logs)) {
+                    const logBox = document.getElementById('consoleLogs');
+                    logBox.innerHTML = data.logs.map(l => `<div class="log-${l.level}">[${l.timestamp}] [${l.level}] ${l.message}</div>`).join('');
+                    logBox.scrollTop = logBox.scrollHeight;
+                }
+
+            } catch (e) {
+                console.error("Telemetry fetch error:", e);
+            }
+        }
+
+        setInterval(updateTelemetry, 100); // 10 Hz UI update
+
+        function animate3D() {
+            requestAnimationFrame(animate3D);
+            renderer.render(scene, camera);
+        }
+        animate3D();
+
+        // ---------------------------------------------------------
+        // ACTION CONTROLS & REST CALLS
+        // ---------------------------------------------------------
+        async function setStartPose() {
+            await fetch('/api/amr/start', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({x: 1.0, y: 1.0}) });
+        }
+
+        async function setGoalPose() {
+            await fetch('/api/amr/goal', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({x: 8.0, y: 7.0}) });
+        }
+
+        async function triggerPlan() {
+            await fetch('/api/amr/plan', { method: 'POST' });
+        }
+
+        async function controlNav(action) {
+            await fetch('/api/amr/navigate', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({action}) });
+        }
+
+        async function triggerEStop() {
+            await fetch('/api/amr/estop', { method: 'POST' });
+        }
+
+        async function resetSystem() {
+            await fetch('/api/amr/reset', { method: 'POST' });
+        }
+
+        async function sendTeleop(command) {
+            await fetch('/api/amr/teleop', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({command}) });
+        }
+
+        async function addObstacle(x, y) {
+            await fetch('/api/amr/obstacle', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({action: 'add', x, y}) });
+        }
+
+        async function clearObstacles() {
+            await fetch('/api/amr/obstacle', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({action: 'clear'}) });
+        }
+
+        // Keyboard Controls listener
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'w' || e.key === 'W') sendTeleop('forward');
+            if (e.key === 's' || e.key === 'S') sendTeleop('backward');
+            if (e.key === 'a' || e.key === 'A') sendTeleop('left');
+            if (e.key === 'd' || e.key === 'D') sendTeleop('right');
+            if (e.key === ' ') sendTeleop('stop');
+        });
+    </script>
+</body>
+</html>

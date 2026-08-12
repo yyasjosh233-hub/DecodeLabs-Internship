@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: dvj-robotics-ai
-    runtime: docker
-    plan: free
-    region: oregon
-    dockerfilePath: ./Dockerfile

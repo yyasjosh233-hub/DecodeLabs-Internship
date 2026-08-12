@@ -1,0 +1,2 @@
+Inspection ID,Timestamp,Filename,Product Type,Result,Defect,Confidence,Width_mm,Height_mm,Area_mm2,Latency_ms
+TEST-INS-0e850e,2026-08-09T10:05:00,good_gear.png,Gear,PASS,None,0.98,50.0,50.0,1963.5,30.0

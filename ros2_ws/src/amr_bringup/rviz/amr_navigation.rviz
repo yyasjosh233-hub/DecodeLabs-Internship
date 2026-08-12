@@ -1,0 +1,41 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Value: true
+    - Class: rviz_default_plugins/RobotModel
+      Name: RobotModel
+      Value: true
+    - Class: rviz_default_plugins/TF
+      Name: TF
+      Value: true
+    - Class: rviz_default_plugins/LaserScan
+      Name: LaserScan
+      Topic: /scan
+      Value: true
+    - Class: rviz_default_plugins/Map
+      Name: Map
+      Topic: /map
+      Value: true
+    - Class: rviz_default_plugins/Map
+      Name: Global Costmap
+      Topic: /global_costmap
+      Value: true
+    - Class: rviz_default_plugins/Map
+      Name: Local Costmap
+      Topic: /local_costmap
+      Value: true
+    - Class: rviz_default_plugins/Path
+      Name: Global Path
+      Topic: /global_path
+      Value: true
+    - Class: rviz_default_plugins/Odometry
+      Name: Odometry Filtered
+      Topic: /odometry/filtered
+      Value: true
+  Global Options:
+    Fixed Frame: map

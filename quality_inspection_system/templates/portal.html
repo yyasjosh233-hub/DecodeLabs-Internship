@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Industrial Automation Platform | Week 1 &amp; Week 2</title>
+    <meta name="description" content="Industrial Automation Engineering Suite — Robotics Path Planner PRO and Automated Quality Inspection System.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark:   #070B14;
+            --card-bg:   rgba(13, 20, 40, 0.90);
+            --border-glow: rgba(56, 189, 248, 0.25);
+            --cyan:      #00F0FF;
+            --blue:      #0284C7;
+            --green:     #10B981;
+            --yellow:    #EAB308;
+            --text:      #F8FAFC;
+            --muted:     #94A3B8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            min-height: 100vh;
+            background-color: var(--bg-dark);
+            background-image:
+                radial-gradient(circle at 22% 12%, rgba(2,132,199,0.18) 0%, transparent 42%),
+                radial-gradient(circle at 78% 88%, rgba(16,185,129,0.13) 0%, transparent 42%),
+                linear-gradient(180deg, #070B14 0%, #030712 100%);
+            font-family: 'Outfit', sans-serif;
+            color: var(--text);
+        }
+
+        /* Grid overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 0;
+        }
+
+        body > * { position: relative; z-index: 1; }
+
+        /* ── HEADER ── */
+        header {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 36px 48px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            width: 50px; height: 50px;
+            background: rgba(0,240,255,0.10);
+            border: 1.5px solid rgba(0,240,255,0.45);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .logo-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--text);
+        }
+
+        .logo-sub {
+            font-size: 0.78rem;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .badge-online {
+            background: rgba(16,185,129,0.12);
+            border-color: rgba(16,185,129,0.45);
+            color: var(--green);
+        }
+
+        .badge-port {
+            background: rgba(0,240,255,0.08);
+            border-color: rgba(0,240,255,0.3);
+            color: var(--cyan);
+        }
+
+        .pulse-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 8px var(--green);
+            animation: pulse 1.6s infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes pulse {
+            0%,100% { opacity:1; transform:scale(1); }
+            50%      { opacity:.35; transform:scale(1.45); }
+        }
+
+        /* ── HERO ── */
+        .hero {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 72px 24px 52px;
+            text-align: center;
+        }
+
+        .hero-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            letter-spacing: 3.5px;
+            text-transform: uppercase;
+            color: var(--cyan);
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 800;
+            line-height: 1.15;
+            background: linear-gradient(130deg, #fff 25%, #38BDF8 65%, #00F0FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 22px;
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--muted);
+            line-height: 1.75;
+            max-width: 680px;
+            margin: 0 auto 44px;
+        }
+
+        /* ── CARDS GRID ── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 36px;
+        }
+
+        @media (max-width: 1024px) {
+            .cards-grid { grid-template-columns: 1fr; }
+        }
+
+        /* card */
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 18px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+        }
+
+        /* shimmer stripe */
+        .project-card::after {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -60%;
+            width: 60%;
+            height: 220%;
+            background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.05) 50%, transparent 60%);
+            transform: skewX(-20deg);
+            transition: left 0.55s ease;
+        }
+
+        .project-card:hover::after { left: 120%; }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 22px 60px rgba(0,0,0,0.55);
+        }
+
+        .card-week1:hover { border-color: rgba(2,132,199,0.65); }
+        .card-week2:hover { border-color: rgba(16,185,129,0.55); }
+        .card-week3:hover { border-color: rgba(249,115,22,0.65); }
+
+        /* Soft colour bleed behind card on hover */
+        .card-week1::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            background: linear-gradient(140deg, rgba(2,132,199,0.08) 0%, transparent 55%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card-week2::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            background: linear-gradient(140deg, rgba(16,185,129,0.08) 0%, transparent 55%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card-week3::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            background: linear-gradient(140deg, rgba(249,115,22,0.08) 0%, transparent 55%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .project-card:hover::before { opacity: 1; }
+
+        /* tag */
+        .card-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 5px 13px;
+            border-radius: 7px;
+            width: fit-content;
+            position: relative;
+        }
+
+        .tag-week1 {
+            background: rgba(2,132,199,0.15);
+            border: 1px solid rgba(2,132,199,0.45);
+            color: #38BDF8;
+        }
+
+        .tag-week2 {
+            background: rgba(16,185,129,0.15);
+            border: 1px solid rgba(16,185,129,0.45);
+            color: var(--green);
+        }
+
+        .tag-week3 {
+            background: rgba(249,115,22,0.15);
+            border: 1px solid rgba(249,115,22,0.45);
+            color: #F97316;
+        }
+
+        /* icon */
+        .card-icon {
+            width: 58px; height: 58px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+        }
+
+        .icon-blue {
+            background: rgba(2,132,199,0.15);
+            border: 1px solid rgba(2,132,199,0.35);
+        }
+
+        .icon-green {
+            background: rgba(16,185,129,0.15);
+            border: 1px solid rgba(16,185,129,0.35);
+        }
+
+        .icon-orange {
+            background: rgba(249,115,22,0.15);
+            border: 1px solid rgba(249,115,22,0.35);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            line-height: 1.3;
+            position: relative;
+        }
+
+        .card-description {
+            font-size: 0.88rem;
+            color: var(--muted);
+            line-height: 1.65;
+            position: relative;
+        }
+
+        /* feature chips */
+        .feature-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            position: relative;
+        }
+
+        .chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            padding: 4px 9px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.09);
+            color: var(--muted);
+            transition: all 0.2s;
+        }
+
+        .project-card:hover .chip {
+            background: rgba(255,255,255,0.07);
+            border-color: rgba(255,255,255,0.14);
+        }
+
+        /* CTA row */
+        .card-cta {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            position: relative;
+        }
+
+        .btn-launch {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 9px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.22s ease;
+        }
+
+        .btn-week1 { background: var(--blue); color: #fff; }
+        .btn-week1:hover {
+            background: #0369a1;
+            box-shadow: 0 0 24px rgba(2,132,199,0.55);
+            transform: scale(1.04);
+        }
+
+        .btn-week2 { background: var(--green); color: #fff; }
+        .btn-week2:hover {
+            background: #059669;
+            box-shadow: 0 0 24px rgba(16,185,129,0.55);
+            transform: scale(1.04);
+        }
+
+        .btn-week3 { background: #F97316; color: #fff; }
+        .btn-week3:hover {
+            background: #ea580c;
+            box-shadow: 0 0 24px rgba(249,115,22,0.55);
+            transform: scale(1.04);
+        }
+
+        .cta-arrow {
+            font-size: 1.3rem;
+            transition: transform 0.22s ease;
+            color: var(--muted);
+        }
+
+        .project-card:hover .cta-arrow { transform: translateX(5px); color: var(--text); }
+
+        /* ── DIVIDER ── */
+        .section-divider {
+            max-width: 1200px;
+            margin: 56px auto 0;
+            padding: 0 48px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--border-glow), transparent);
+        }
+
+        .divider-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--muted);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        /* ── TECH STACK ── */
+        .tech-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 48px 80px;
+        }
+
+        .tech-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .tech-item {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            padding: 8px 18px;
+            border-radius: 8px;
+            background: rgba(15,23,42,0.8);
+            border: 1px solid rgba(255,255,255,0.07);
+            color: var(--muted);
+            transition: all 0.2s;
+        }
+
+        .tech-item:hover {
+            border-color: rgba(0,240,255,0.3);
+            color: var(--cyan);
+        }
+
+        /* ── SPLIT LINK (open both) ── */
+        .split-link-row {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 48px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-split {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-decoration: none;
+            border: 1.5px solid rgba(0,240,255,0.4);
+            background: rgba(0,240,255,0.08);
+            color: var(--cyan);
+            transition: all 0.22s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-split:hover {
+            background: rgba(0,240,255,0.15);
+            border-color: var(--cyan);
+            box-shadow: 0 0 22px rgba(0,240,255,0.25);
+            transform: scale(1.03);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo-wrap">
+            <div class="logo-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00F0FF" stroke-width="2">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                    <polyline points="2 17 12 22 22 17"/>
+                    <polyline points="2 12 12 17 22 12"/>
+                </svg>
+            </div>
+            <div>
+                <div class="logo-title">Industrial Automation Platform</div>
+                <div class="logo-sub">Robotics &amp; Computer Vision Engineering Suite</div>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <span class="badge badge-online">
+                <span class="pulse-dot"></span>
+                SYSTEMS ONLINE
+            </span>
+            <span class="badge badge-port">PORT 5000</span>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <div class="hero">
+        <div class="hero-eyebrow">Industrial Engineering Platform v3.0</div>
+        <h1>Robotics, Vision &amp;<br>Autonomous Navigation</h1>
+        <p class="hero-desc">
+            A comprehensive multi-module industrial automation platform combining
+            Manipulator Kinematics, Computer Vision Inspection, and AMR Autonomous Navigation.
+        </p>
+    </div>
+
+    <!-- PROJECT CARDS -->
+    <div class="cards-grid" style="margin-top:36px;">
+
+        <!-- WEEK 1 -->
+        <a class="project-card card-week1" href="/week1/">
+            <div class="card-tag tag-week1">PROJECT 1</div>
+            <div class="card-icon icon-blue">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5"/>
+                    <path d="M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            <div class="card-title">Robotics Path Planner PRO</div>
+            <p class="card-description">
+                6-DOF manipulator kinematics simulator with Three.js 3D viewport, Forward/Inverse Kinematics, and Quintic Trajectory.
+            </p>
+            <div class="feature-chips">
+                <span class="chip">3D Viewport</span>
+                <span class="chip">FK/IK Solver</span>
+                <span class="chip">Trajectory</span>
+                <span class="chip">ROS 2</span>
+            </div>
+            <div class="card-cta">
+                <span class="btn-launch btn-week1">Launch Project 1</span>
+                <span class="cta-arrow">→</span>
+            </div>
+        </a>
+
+        <!-- WEEK 2 -->
+        <a class="project-card card-week2" href="/week2/">
+            <div class="card-tag tag-week2">PROJECT 2</div>
+            <div class="card-icon icon-green">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="M21 21l-4.35-4.35"/>
+                </svg>
+            </div>
+            <div class="card-title">Quality Inspection System</div>
+            <p class="card-description">
+                Industrial CV engine processing images through a 15-stage OpenCV pipeline detecting gear defects and cracks.
+            </p>
+            <div class="feature-chips">
+                <span class="chip">OpenCV</span>
+                <span class="chip">Defect Detection</span>
+                <span class="chip">Reports</span>
+                <span class="chip">SQLite</span>
+            </div>
+            <div class="card-cta">
+                <span class="btn-launch btn-week2">Launch Project 2</span>
+                <span class="cta-arrow">→</span>
+            </div>
+        </a>
+
+        <!-- PROJECT 3 -->
+        <a class="project-card card-week3" href="/week3/">
+            <div class="card-tag tag-week3">PROJECT 3</div>
+            <div class="card-icon icon-orange">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 6v6l4 2"/>
+                </svg>
+            </div>
+            <div class="card-title">AMR Autonomous Navigation</div>
+            <p class="card-description">
+                Wheeled Mobile Robot navigation system featuring LiDAR ray-casting, 2D Occupancy Grid, EKF Sensor Fusion, Custom A* Planner, and Tanh Deceleration.
+            </p>
+            <div class="feature-chips">
+                <span class="chip">LiDAR Scan</span>
+                <span class="chip">Occupancy Grid</span>
+                <span class="chip">EKF Fusion</span>
+                <span class="chip">Custom A*</span>
+                <span class="chip">Costmaps</span>
+                <span class="chip">Tanh Decel</span>
+                <span class="chip">ROS 2</span>
+            </div>
+            <div class="card-cta">
+                <span class="btn-launch btn-week3">Launch Project 3</span>
+                <span class="cta-arrow">→</span>
+            </div>
+        </a>
+
+    </div>
+
+
+    <!-- TECH STACK DIVIDER -->
+    <div class="section-divider">
+        <div class="divider-line"></div>
+        <div class="divider-label">Technology Stack</div>
+        <div class="divider-line"></div>
+    </div>
+
+    <!-- TECH STACK -->
+    <div class="tech-section">
+        <div class="tech-row">
+            <div class="tech-item">Python 3.14</div>
+            <div class="tech-item">Flask 3.1</div>
+            <div class="tech-item">OpenCV 4.13</div>
+            <div class="tech-item">NumPy 2.4</div>
+            <div class="tech-item">SQLite</div>
+            <div class="tech-item">ReportLab</div>
+            <div class="tech-item">OpenPyXL</div>
+            <div class="tech-item">React 19</div>
+            <div class="tech-item">TypeScript</div>
+            <div class="tech-item">Three.js</div>
+            <div class="tech-item">Vite 8</div>
+            <div class="tech-item">Chart.js</div>
+        </div>
+    </div>
+
+</body>
+</html>

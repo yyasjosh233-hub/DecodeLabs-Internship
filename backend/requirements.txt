@@ -1,0 +1,2 @@
+# Robotics Path Planner Pro - Python Backend Requirements
+# Uses Python 3 Standard Library (No external pip dependencies required)
