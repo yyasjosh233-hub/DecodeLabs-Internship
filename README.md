@@ -1,11 +1,11 @@
-# DecodeLabs Internship Projects — Industrial Automation & Robotics Platform
+# Industrial Automation & Robotics Platform
 
 [![Build Status](https://img.shields.io/badge/Build-Passing-success.svg)](#testing)
 [![Test Suite](https://img.shields.io/badge/Test%20Suite-149%2F149%20Passed-brightgreen.svg)](#testing)
 [![License](https://img.shields.io/badge/License-MIT-orange.svg)](#license)
-[![DecodeLabs](https://img.shields.io/badge/DecodeLabs-100%25%20Submission%20Ready-blue.svg)](#internship-submission-checklist)
+[![Submission Ready](https://img.shields.io/badge/Status-100%25%20Production%20Ready-blue.svg)](#submission-verification-checklist)
 
-A production-grade, multi-module industrial automation engineering platform developed for the DecodeLabs Internship Program. This repository contains full-stack implementations of three advanced industrial robotics & computer vision systems:
+A production-grade, multi-module industrial automation engineering platform. This repository contains full-stack implementations of three advanced industrial robotics & computer vision systems:
 
 - **Project 1 — 6-DOF Robotics Path Planner PRO**
 - **Project 2 — Automated Quality Inspection Workstation**
@@ -50,11 +50,14 @@ Open `http://localhost:5173` in your browser.
 
 ### Screenshots
 
-- **Project 1 Dashboard Figure 1.1:** Project 1 — 3D Three.js Robotic Arm Viewport & Telemetry Dashboard.
-- **Project 1 Kinematics Figure 1.2:** Project 1 — DH Parameter Table, Jacobian Determinant & IK Solver.
-- **Project 1 Trajectory & Collision Figure 1.3:** Project 1 — Quintic Trajectory Curves & 3D Obstacle Collision Bounding Boxes.
+- **Figure 1.1: Project 1 — 3D Three.js Robotic Arm Viewport & Telemetry Dashboard**  
+  ![Project 1 Dashboard](docs/screenshots/project1_dashboard.png)
 
-![Project 1 Preview](docs/screenshots/urdf_analyzer_preview.png)
+- **Figure 1.2: Project 1 — DH Parameter Table, Jacobian Determinant & IK Solver**  
+  ![Project 1 Kinematics](docs/screenshots/project1_kinematics.png)
+
+- **Figure 1.3: Project 1 — Quintic Trajectory Curves & 3D Obstacle Collision Bounding Boxes**  
+  ![Project 1 Trajectory & Collision](docs/screenshots/project1_trajectory_collision.png)
 
 ---
 
@@ -102,11 +105,14 @@ Access the Industrial Inspection Portal at `http://localhost:5000`.
 
 ### Screenshots
 
-- **Project 2 Dashboard Figure 2.1:** Project 2 — Conveyor Computer Vision Live Inspection Dashboard.
-- **Project 2 15-Stage Pipeline Figure 2.2:** Project 2 — 15-Stage OpenCV Computer Vision Pipeline Breakdown.
-- **Project 2 Verdict Figure 2.3:** Project 2 — PASS/FAIL Verdict Screen & Multi-Format Report Download.
+- **Figure 2.1: Project 2 — Conveyor Computer Vision Live Inspection Dashboard**  
+  ![Project 2 Dashboard](docs/screenshots/project2_dashboard.png)
 
-![Project 2 Preview](docs/screenshots/dashboard_preview.png)
+- **Figure 2.2: Project 2 — 15-Stage OpenCV Computer Vision Pipeline Breakdown**  
+  ![Project 2 15-Stage Pipeline](docs/screenshots/project2_15_stage_pipeline.png)
+
+- **Figure 2.3: Project 2 — PASS/FAIL Verdict Screen & Multi-Format Report Download**  
+  ![Project 2 Verdict](docs/screenshots/project2_pass_fail.png)
 
 ---
 
@@ -139,19 +145,24 @@ Navigating the actual browser workflow:
 
 ### Screenshots
 
-- **Project 3 AMR Dashboard Figure 3.1:** Project 3 — AMR Navigation Dashboard & Real-Time LiDAR Viewport.
-- **Project 3 Occupancy Grid Figure 3.2:** Project 3 — 2D Occupancy Grid & Dual Costmap Inflation Layers.
-- **Project 3 A\* Pathfinding Figure 3.3:** Project 3 — Custom A* Global Path Planning with Manhattan Heuristic.
-- **Project 3 Dynamic Replanning Figure 3.4:** Project 3 — Dynamic Obstacle Avoidance & Reflex Re-planning.
+- **Figure 3.1: Project 3 — AMR Navigation Dashboard & Real-Time LiDAR Viewport**  
+  ![Project 3 AMR Dashboard](docs/screenshots/project3_amr_dashboard.png)
 
-![Project 3 Preview](docs/screenshots/amr_navigation_preview.png)
+- **Figure 3.2: Project 3 — 2D Occupancy Grid & Dual Costmap Inflation Layers**  
+  ![Project 3 Occupancy Grid](docs/screenshots/project3_occupancy_grid.png)
+
+- **Figure 3.3: Project 3 — Custom A\* Global Path Planning with Manhattan Heuristic**  
+  ![Project 3 A* Pathfinding](docs/screenshots/project3_astar_path.png)
+
+- **Figure 3.4: Project 3 — Dynamic Obstacle Avoidance & Reflex Re-planning**  
+  ![Project 3 Dynamic Replanning](docs/screenshots/project3_dynamic_obstacle_replanning.png)
 
 ---
 
 ## Technology Stack
 
 ```
-DecodeLabs Platform Architecture
+Industrial Automation Platform Architecture
 │
 ├── Frontend (Project 1 UI)
 │   ├── React 19 + TypeScript
@@ -213,7 +224,7 @@ Comprehensive project and API documentation is located in the `docs/` directory:
 
 - [`docs/PROJECT_DOCUMENTATION.md`](docs/PROJECT_DOCUMENTATION.md): Complete architecture, physics algorithms, and pipeline details.
 - [`docs/API_DOCUMENTATION.md`](docs/API_DOCUMENTATION.md): RESTful API endpoint specifications and JSON payload schemas.
-- [`docs/DECODELABS_SUBMISSION_CHECKLIST.md`](docs/DECODELABS_SUBMISSION_CHECKLIST.md): Verification matrix against DecodeLabs submission guidelines.
+- [`docs/SUBMISSION_CHECKLIST.md`](docs/SUBMISSION_CHECKLIST.md): Final verification matrix against platform guidelines.
 
 ---
 
@@ -230,7 +241,7 @@ Comprehensive project and API documentation is located in the `docs/` directory:
 
 ---
 
-## Internship Submission Checklist
+## Submission Verification Checklist
 
 - [x] **Project 1:** 6-DOF Arm Forward & Inverse Kinematics verified
 - [x] **Project 1:** Jacobian singularity & manipulability analysis implemented

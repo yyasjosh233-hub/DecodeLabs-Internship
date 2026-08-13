@@ -1,8 +1,8 @@
-# DecodeLabs Internship — API Reference Documentation
+# Industrial Automation & Robotics — API Reference Documentation
 
 ## Overview
 
-The DecodeLabs Industrial Automation Portal provides RESTful API endpoints for Quality Inspection, AMR Navigation, Robotics Kinematics, and System Telemetry.
+The Industrial Automation Portal provides RESTful API endpoints for Quality Inspection, AMR Navigation, Robotics Kinematics, and System Telemetry.
 
 ---
 
@@ -98,42 +98,33 @@ The DecodeLabs Industrial Automation Portal provides RESTful API endpoints for Q
   {
     "status": "success",
     "obstacle": { "id": "dyn-1", "x": 4.5, "y": 2.2 },
-    "replanned": true,
-    "deceleration_active": true
-  }
-  ```
-
-### 2.4 Emergency Stop & Reset
-- **Endpoint**: `POST /api/amr/estop`
-- **Response** `200 OK`:
-  ```json
-  {
-    "status": "success",
-    "nav_status": "EMERGENCY_STOP",
-    "velocity": { "linear": 0.0, "angular": 0.0 }
+    "replanned_path": true
   }
   ```
 
 ---
 
-## 3. Project 1 — Robotics Kinematics API (ROS 2 Bridge)
+## 3. Project 1 — Robotics Kinematics API
 
-### 3.1 Inverse Kinematics Endpoint
+### 3.1 Solve Inverse Kinematics
 - **Endpoint**: `POST /api/robotics/ik`
 - **Headers**: `Content-Type: application/json`
 - **Request Body**:
   ```json
   {
-    "target_pose": { "x": 0.4, "y": 0.2, "z": 0.5, "roll": 0, "pitch": 0, "yaw": 0 },
-    "seed_joints": { "q1": 0, "q2": 0, "q3": 0, "q4": 0, "q5": 0, "q6": 0 }
+    "target_pose": {
+      "position": [0.4, 0.2, 0.5],
+      "orientation_rpy": [0, 1.57, 0]
+    }
   }
   ```
 - **Response** `200 OK`:
   ```json
   {
-    "success": true,
-    "solution": { "q1": 26.57, "q2": -18.42, "q3": 34.15, "q4": 0.0, "q5": 44.27, "q6": -26.57 },
-    "error_distance_mm": 1.2,
-    "iterations": 14
+    "status": "success",
+    "num_solutions": 4,
+    "joint_angles_rad": [0.463, -0.211, 0.854, 0.0, 0.927, -0.463],
+    "manipulability_w": 0.142,
+    "is_singular": false
   }
   ```

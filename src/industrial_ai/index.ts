@@ -1,5 +1,5 @@
 /**
- * Industrial AI Suite — DecodeLabs Internship Core Module Exports
+ * Industrial AI Suite — Core Module Exports
  */
 
 export * from './anomalyDetector';

@@ -1,8 +1,8 @@
-# DecodeLabs Internship — Comprehensive Project Documentation
+# Industrial Automation & Robotics — Comprehensive Project Documentation
 
 ## Executive Summary
 
-This repository contains the complete industrial engineering suite developed for the **DecodeLabs Internship Program**. The platform unites three core industrial automation projects into a cohesive, high-performance web and backend system:
+This repository contains the complete industrial engineering platform. The platform unites three core industrial automation projects into a cohesive, high-performance web and backend system:
 
 1. **Project 1 — 6-DOF Robotics Path Planner PRO**: Forward & Inverse Kinematics, Jacobian Singularity Analysis, Quintic Trajectory Generation, 3D Collision Detection, Emergency Stop, and ROS 2 Integration.
 2. **Project 2 — Automated Quality Inspection System**: 15-Stage OpenCV Computer Vision Pipeline, Synthetic Industrial Component Dataset Generator, Real-time Defect Classification, Telecentric Dimensioning, and Automated Multi-Format Reporting (PDF, CSV, Excel, JSON).
@@ -61,7 +61,7 @@ The vision engine processes high-resolution industrial component images through 
 
 | Domain | Technologies |
 | :--- | :--- |
-| **Frontend Framework** | React 19, TypeScript, Vite, TailwindCSS / CSS Modules |
+| **Frontend Framework** | React 19, TypeScript, Vite, CSS Modules |
 | **3D Rendering** | Three.js, WebGL, `@types/three` |
 | **Icons & Design** | Lucide React, Glassmorphic Modern Dark Theme |
 | **Backend Service** | Python 3.10+, Flask, SQLite3, ReportLab (PDF), OpenPyXL, Pandas |

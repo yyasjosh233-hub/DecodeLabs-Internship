@@ -1,4 +1,4 @@
-# DecodeLabs Internship — Final Submission Verification Checklist
+# Final Submission Verification Checklist
 
 | Requirement ID | Verification Item | Status | Evidence / Location |
 | :--- | :--- | :---: | :--- |
